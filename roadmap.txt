@@ -26,13 +26,19 @@ Inbox
 
 
 ##### TODO #####
-.decode() before displaying?
+** tagging **
+** GUI     **
+## MISC ##
 DB UNIQUE errors should make themselves known
 more DB fields for messages?
-cache pass once entered for use with subsequent refreshes?
+cache pass once entered for use with subsequent refreshes?, also...
 password input from browser / better password handling (no getpass)
-html-to-plaintext messages with no plain counterpart
-send confirmation
-spam header 4/5 thing
+html-to-plaintext messages for those with no plain counterpart
+send confirmation dialog
+spam header detection
 cc bcc
 add sent mail to Outbox table
+
+
+##### NOTES #####
+.decode() before displaying?
