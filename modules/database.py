@@ -3,6 +3,7 @@
 # This module performs database operations.
 
 import sqlite3
+import email
 
 def connect():
     global cur
@@ -56,7 +57,7 @@ def delete_account(address):
 
 
 # Inbox
-# (id TEXT UNIQUE, account INTEGER, raw TEXT)
+# (id TEXT UNIQUE, account INTEGER, data TEXT)
 
 def add_raw_message(accid, rawdata):
     # Extract the Message-ID
