@@ -1,0 +1,42 @@
+##### DEFINITIONS AND EXPLAINATIONS #####
+INBOX:
+A collection of messages that were addressed to a certain account.
+Messages are stored collectively and have a field for which account they were sent to.
+
+OUTBOX:
+A collection of messages that were sent by a certain
+
+
+
+
+##### Code Modules #####
+retrieve: code related to retrieving data from mailservers
+parse: code related to extracting meaningful data from raw email data
+httpd: code related to serving meaningful data to users via webserver
+database: code related to storing and retrieving data from the database. SQL queries should only be executed here.
+
+database shell, database initializer
+
+
+
+##### Database Model #####
+
+Accounts
+(id INTEGER PRIMARY KEY, address TEXT UNIQUE, in_username TEXT, in_host TEXT, in_port INT,
+                                              out_username TEXT, out_host TEXT, out_port INT)
+
+Inbox
+(id TEXT UNIQUE, account INTEGER, data TEXT)
+
+
+
+TODO
+.decode() before displaying?
+DB UNIQUE errors should make themselves known
+more DB fields for messages?
+cache pass once entered for use with subsequent refreshes?
+password input from browser / better password handling (no getpass)
+html-to-plaintext messages with no plain counterpart
+send confirmation
+spam header 4/5 thing
+todo cc bc
