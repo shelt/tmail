@@ -12,6 +12,8 @@ This client is:
 
 * SSL enabled.
 
+* Under development and not yet fully functional.
+
 ### Potential security concerns
 
 * Depending on your MTA (Mail transfer agent), your IP address can be included in your mail header.
