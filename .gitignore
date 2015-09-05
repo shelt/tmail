@@ -1,5 +1,8 @@
 *~
 
+# Python compiled
+*.pyc
+
 # KDE directory preferences
 .directory
 
