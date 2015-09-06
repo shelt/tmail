@@ -42,3 +42,19 @@ add sent mail to Outbox table
 
 ##### NOTES #####
 .decode() before displaying?
+will nonstandard headers like thread-index be neccesary to parse in order to represent threads?
+
+
+#### web ####
+PAGES
+THREADS: all messages which have not been replied to by another message.
+INBOX: all in messages listed by order of date
+OUTBOX: all out messages listed by order of date
+Selecting a message will show a thread. If the message is a reply to another message,
+that message will appear below it. If the message has been replied to by another message,
+that message, links to that message will appear.
+If the message has been replied to (i.e. it is the in-reply-to field of some other message(s)),
+links to those messages will show above the main message in bar type links.
+
+##### Dynamic elements #####
+

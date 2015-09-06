@@ -1,0 +1,160 @@
+body
+{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: HelveticaNeue,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 24px;
+    color: #666;
+    margin:0;
+}
+/*
+    BARS
+*/
+
+div.topbar
+{
+    width:100%;
+    height:10%;
+    top:0;
+    left:0;
+    position:fixed;
+
+    border-bottom:1px solid #B3B3B3;
+    background:#F6F6F6;
+}
+span.logo
+{
+    font-family: Avantgarde, sans-serif;
+    font-weight: bold;
+    color:#3366CC;
+    position:absolute;
+    bottom:25%;
+    padding-left:10px;
+    opacity:0.4;
+    font-size:30px;
+}
+
+
+/*
+    SIDEBAR AREA
+*/
+div.sidebar
+{
+    width:20%;
+    height:100%;
+    top:10%;
+    left:0;
+    position:fixed;
+
+    border-top:1px solid #B3B3B3;
+    border-right:1px solid #B3B3B3;
+    border-bottom:100px solid #B3B3B3;
+    background:#F6F6F6;
+}
+ol.sidelinks
+{
+    width:100%;
+    height:100%;
+    padding: 0;
+    margin: 0;
+}
+li.sidelink
+{
+    border-bottom:1px solid #B3B3B3;
+    border-right:1px solid #B3B3B3;
+    list-style-type:none;
+    height:40px;
+}
+li.sidelink:hover
+{
+    background-color:#EEE;
+    border:1px solid #B3B3B3;
+}
+li.sidelink > a
+{
+    font-family: Verdana, Geneva, sans-serif;
+    font-size:15px;
+    font-weight: bold;
+    display:block;
+    width:100%;
+    height:100%;
+    padding:0;
+    padding-left:20px;
+    padding-top:7px;
+    
+    color: #666;
+    text-decoration : none;
+}
+
+
+
+
+
+
+
+
+/*
+    CONTENT AREA
+*/
+div.contentarea
+{
+    width:100%;
+    height:100%;
+    position:fixed;
+    top:10%;
+    left:20%;
+}
+
+/*
+    MESSAGE CONTENT
+*/
+ol.messages
+{
+    width:80%;
+    height:100%;
+    overflow: scroll;
+    padding: 0;
+    margin: 0;
+}
+li.message
+{
+    border-bottom:1px solid #B3B3B3;
+    list-style-type:none;
+    height:40px;
+}
+li.message:hover
+{
+    background-color:#EEE;
+    border:1px solid #B3B3B3;
+}
+li.message > a
+{
+    
+    display:block;
+    width:100%;
+    height:100%;
+    padding:0;
+    padding-left:20px;
+    padding-top:6px;
+    
+    color: #333;
+    text-decoration : none;
+}
+
+div.info
+{
+    float: left;
+    position:absolute;
+}
+div.info.author
+{
+    left:2%;
+}
+div.info.subject
+{
+    left:20%;
+}
+div.info.date
+{
+    right:23%;
+}
