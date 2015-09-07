@@ -44,7 +44,7 @@ def get_messages_list(boxtype):
         raw_msgs = database.get_outbox()
     else:
         raise ValueError("Unknown boxtype: "+boxtype)
-    body = ""
+    msgs = ""
     for raw_msg in raw_msgs:
         body = raw_msg[0]
         if raw_msg[1] == 1: # is read?
@@ -58,13 +58,18 @@ def get_messages_list(boxtype):
         subj   = escape(msg.get("Subject"))
         date   = escape(msg.get("Date"))
 
-    string = """
-            <li class="message">
-                <a href="/thread/{msgid}">
-                    <div class="info sender">{sender}</div>
-                    <div class="info recipient">{recip}</div>
-                    <div class="info subject" style="font-weight: {weight};">{subj}</div>
-                    <div class="info date">{date}</div>
-                </a>
-            </li>""".format(msgid=msgid,sender=sender,recip=recip,weight=weight,subj=subj,date=date)
-    return string
+        msgs += """
+                <li class="message">
+                    <a href="/thread/{msgid}">
+                        <div class="info whobox">
+                            <div class="sender">{sender}</div>
+                            <div class="recipient">{recip}</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: {weight};">{subj}</div>
+                            <div class="date">{date}</div>
+                        </div>
+                        
+                    </a>
+                </li>""".format(msgid=msgid,sender=sender,recip=recip,weight=weight,subj=subj,date=date)
+    return msgs

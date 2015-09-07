@@ -152,38 +152,33 @@ li.message > a
     width:100%;
     height:100%;
     padding:0;
-    padding-left:20px;
-    padding-top:8px;
     
     color: #333;
     text-decoration : none;
 }
 
-
 div.info
 {
-    float: left;
-    position:absolute;
+    font-size:10px;
+    padding-top:0.6%;
+    line-height:12px;
 }
-div.info.sender
+
+div.info.whobox
+{
+    float:left;
+    padding-top:0.6%;
+    margin-left:1%; /* contributes to div.info.subject margin-left */
+    max-width: 35%; /* contributes to div.info.subject margin-left */
+
+}
+div.whobox > div.sender:before    {color:#AAA;content:"F: ";}
+div.whobox > div.recipient:before {color:#AAA;content:"T: ";}
+
+div.info.whatwhenbox
 {
     font-size:10px;
-    top:3px;
-    left:2%;
+    margin-left:36%; /* same as whobox.max-width + whobox.margin-left*/
+    max-width: 50%;
 }
-div.info.sender:before    {color:#AAA;content:"F: "}
-div.info.recipient:before {color:#AAA;content:"T: "}
-div.info.recipient
-{
-    font-size:10px;
-    top:15px;
-    left:2%;
-}
-div.info.subject
-{
-    left:37%;
-}
-div.info.date
-{
-    right:13%;
-}
+div.whatwhenbox > div.date {color:#AAA;}
