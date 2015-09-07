@@ -27,6 +27,8 @@ Inbox
 
 ##### TODO #####
 Refresh: get or post?
+Sort date list by recency
+Format time into: sept 05 20:09 (5m ago)
 Post requests: Send-message
 Add sent messages to outbox
 Implement "thread" page
