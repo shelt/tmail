@@ -63,7 +63,7 @@ def get_messages_list(boxtype):
             weight = "bold"
         else:
             weight = "normal"
-        msg = email.message_from_string(body.decode())
+        msg = email.message_from_string(body)
         msgid  = escape(msg.get("Message-ID"))
         sender = escape(msg.get("From"))
         recip  = escape(msg.get("To"))
