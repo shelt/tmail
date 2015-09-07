@@ -11,9 +11,12 @@
         <a class="refresh">Refresh</a>
     </div>
     <div class="sidebar">
-        <ol class="sidelinks">
-            <li class="sidelink"><a href="http://localhost:8000/box/in">Inbox</a></li>
-            <li class="sidelink"><a href="http://localhost:8000/box/out">Outbox</a></li>
+        <ol class="sidelinks"><button type="submit" form="form1" value="Submit">Submit</button>
+            <li class="sidelink"><a id="sidelink-inbox" href="http://localhost:8000/box/in">Inbox</a></li>
+            <li class="sidelink"><a id="sidelink-outbox" href="http://localhost:8000/box/out">Outbox</a></li>
+
+            <form name="refresh" action="#">
+            <li class="sidelink" id="refresh"><button href="javascript:refresh()" href="#">Refresh</button></li>
         </ol>
     </div>
     <div class="contentarea">

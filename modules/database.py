@@ -63,7 +63,7 @@ def delete_account(address):
 def add_raw_message(accid, rawdata):
     # Extract the Message-ID
     msgid = email.message_from_string(rawdata.decode()).get('Message-ID')
-    cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data,read) VALUES(?,?,?,?)", (msgid,accid,rawdata,0))
+    cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data,read) VALUES(?,?,?,?)", (msgid,accid,rawdata,1))
 
 def delete_message(msgid):
     cur.execute("DELETE FROM Inbox WHERE msgid = ?",(msgid,))

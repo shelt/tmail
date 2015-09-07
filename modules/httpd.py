@@ -4,6 +4,7 @@
 
 import sys,os
 import re
+from urllib import parse
 from mimetypes import guess_type
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.cookies import SimpleCookie
@@ -66,17 +67,11 @@ CTYPE_ISCACHE = {
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
-        form = cgi.FieldStorage(
-                fp=self.rfile,
-                headers=self.headers,
-                environ={'REQUEST_METHOD': 'POST',
-                         'CONTENT_TYPE'  : self.headers['Content-Type'],})
-        self.path = self.path.rstrip("/")
-        if self.path == "/send":
-            pass
+        length = int(self.headers['Content-Length'])
+        post_data = parse.parse_qs(self.rfile.read(length).decode('utf-8'))
+        print(post_data) #todo
+    
         
-        if form.list[0].name == "username" and form.list[1].name == "password":
-            pass
     def do_GET(self):
         print(self.path)
         self.path = self.path.rstrip("/")
@@ -114,7 +109,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         #################
         elif self.path.startswith("/box/"):
             self.respond(200,[("Content-type","text/html")])
-            htgen.box(self.wfile, self.path[3:])
+            htgen.box(self.wfile, self.path[5:])
         
         ###################
         # Thread handling #

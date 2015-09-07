@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # Code that generates html dynamically.
+from html import escape
 import email
 
 from modules import database
@@ -18,12 +19,14 @@ def box(wfile, boxtype):
 <body>
     <div class="topbar">
         <span class="logo">tmail</span>
-        <a class="refresh">Refresh</a>
     </div>
     <div class="sidebar">
         <ol class="sidelinks">
-            <li class="sidelink"><a href="/box/in">Inbox</a></li>
-            <li class="sidelink"><a href="/box/out">Outbox</a></li>
+            <li class="sidelink"><a id="sidelink-inbox" href="http://localhost:8000/box/in">Inbox</a></li>
+            <li class="sidelink"><a id="sidelink-outbox" href="http://localhost:8000/box/out">Outbox</a></li>
+
+            <form id="refresh" method="post" action="#">
+            <li class="sidelink" id="refresh"><button type="submit" form="refresh" value="refresh">Refresh</button></li>
         </ol>
     </div>
     <div class="contentarea">
@@ -32,13 +35,15 @@ def box(wfile, boxtype):
         </ol>
     </div>
 </body>
-""".format(title=boxtype, messages=get_messages_list(boxtype)).encode())
+""".format(title=boxtype, messages=get_messages_list(boxtype)).encode("UTF-8"))
 
 def get_messages_list(boxtype):
     if boxtype == "in":
         raw_msgs = database.get_inbox()
     elif boxtype == "out":
         raw_msgs = database.get_outbox()
+    else:
+        raise ValueError("Unknown boxtype: "+boxtype)
     body = ""
     for raw_msg in raw_msgs:
         body = raw_msg[0]
@@ -47,11 +52,11 @@ def get_messages_list(boxtype):
         else:
             weight = "normal"
         msg = email.message_from_string(body.decode())
-        msgid = msg.get("Message-ID")
-        sender = msg.get("From")
-        recip  = msg.get("To")
-        subj   = msg.get("Subject")
-        date   = msg.get("Date")
+        msgid  = escape(msg.get("Message-ID"))
+        sender = escape(msg.get("From"))
+        recip  = escape(msg.get("To"))
+        subj   = escape(msg.get("Subject"))
+        date   = escape(msg.get("Date"))
 
     string = """
             <li class="message">
