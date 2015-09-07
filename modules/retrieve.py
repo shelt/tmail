@@ -7,7 +7,7 @@
 from getpass import getpass
 import imaplib
 
-import database
+from modules import database
 
 
 # This function retrieves the newest mail of an address from the mailserver

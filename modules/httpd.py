@@ -1,33 +1,14 @@
 #!/usr/bin/env python
-# NOTE this file is from an old project and must be revamped
 
-
-
-
-
-
-
-
-
+# Code related to serving hypertext.
 
 import sys,os
 import re
-import cgi
 from mimetypes import guess_type
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.cookies import SimpleCookie
 
-# Local imports
-from modules import auth
-
-# Pagebuilder imports
-from modules.contentgen import dashboard
-
-### TODO ###
-# apply page
-# add email format verification
-# better form identification (login vs apply vs chat input)
-# add "incorrect login" (at end of post request)
+from modules import htgen
 
 # Content-Types associated with extensions
 CTYPE_PATH = {
@@ -83,14 +64,6 @@ CTYPE_ISCACHE = {
 }
 
 
-
-
-
-# Imported page builders
-BUILDERS = {
-"dashboard":dashboard
-}
-
 class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         form = cgi.FieldStorage(
@@ -98,101 +71,57 @@ class RequestHandler(BaseHTTPRequestHandler):
                 headers=self.headers,
                 environ={'REQUEST_METHOD': 'POST',
                          'CONTENT_TYPE'  : self.headers['Content-Type'],})
+        self.path = self.path.rstrip("/")
+        if self.path == "/send":
+            pass
+        
         if form.list[0].name == "username" and form.list[1].name == "password":
-            uid = auth.verify_user(form.list[0].value, form.list[1].value)
-            if uid is not None:
-                print("* "+self.client_address[0]+" authenticated as "+str(uid)+".")
-                sid = auth.add_session(uid)
-                print("* "+str(uid)+" is now sessioned at "+self.client_address[0])
-                
-                self.respond(302,[("Location","/dashboard/"),
-                                  ('Set-Cookie', 'session=%s; path=/' % sid)])
-            else:
-                print("! "+self.client_address[0]+" entered invalid login info.")
-
+            pass
     def do_GET(self):
-        if lacks_trailing_slash(self.path):
-            self.respond(302,[("Location",self.path + "/")])
-            return
-        # Get cookies
-        cookies = SimpleCookie()
-        cookies.load(self.headers)
-        
-        ### SESSION CHECKING ###
-        
-        # Check cookies for active sessions
-        cookie_val = has_session_cookie(cookies)
-        if cookie_val:
-            # User says they are sessioned
-            sid = cookie_val
-            uid = auth.verify_session(sid)
-            if uid is not None:
-                sessioned = uid # TRUE
+        print(self.path)
+        self.path = self.path.rstrip("/")
+        #################
+        # File handling #
+        #################
+        if is_file(self.path):
+            self.path = "html" + self.path
+
+            # Get Content-Type
+            _,ext = os.path.splitext(self.path)
+            # Open the file
+            if CTYPE_ISBINARY[ext]:
+                f = open(self.path, 'rb')#, errors='ignore')
             else:
-                print("! "+self.client_address[0]+" lied about being sessioned.")
-                # Refresh and clear the session cookie.
-                self.respond(302,[("Location","/login/"),
-                                  ('Set-Cookie', 'session=')])
-                return
-        else:
-            # User is not sessioned
-            print("* "+self.client_address[0]+" arrived as a guest.")
-            sessioned = False
+                f = open(self.path)
             
-        print(self.client_address[0] +" requests "+self.path)
-        ### SESSION DECISION ###
-        
-        
-        # Redirect non-sessioned users away from illegal pages
-        # Redirect sessioned users away from non-session pages (and "/")
-        if sessioned is False and not (self.path.startswith("/login") or self.path.startswith("/apply")):
-            self.respond(302,[("Location","/login/")])
-            return
-        elif sessioned is not False and (self.path == "/" or self.path.startswith("/login") or self.path.startswith("/apply")):
-            self.respond(302,[("Location","/dashboard/")])
-            return
-
-        ### SEND DYNAMIC CONTENT ###
-        if not is_content(self.path):
+            # Respond
             try:
-                builder = BUILDERS[self.path.strip("/")]
-                
-                # Begin response
-                self.respond(200,[("Content-type","text/html")])
-                data = builder.build(sessioned).encode("UTF-8")
-                self.wfile.write(data)
-                return
+                self.respond(200, [("Content-type",CTYPE_PATH[ext])], CTYPE_ISCACHE[ext])
             except KeyError:
-                print("! Directory "+self.path+" has no content builder! Attempting static directory.")
-                self.path += "/index.html"
+                print("! Unhandled extension: "+ext)
+                f.close()
+                return
 
-        ### SEND FILE CONTENT ###
-        # Direct to HTML folder
-        self.path = "html" + self.path
-
-        # Get Content-Type
-        _,ext = os.path.splitext(self.path)
-        # Open the file
-        if CTYPE_ISBINARY[ext]:
-            f = open(self.path, 'rb')#, errors='ignore')
-        else:
-            f = open(self.path)
-        
-        # Respond
-        try:
-            self.respond(200, [("Content-type",CTYPE_PATH[ext])], CTYPE_ISCACHE[ext])
-        except KeyError:
-            print("! Unhandled extension: "+ext)
+            # Send the file (encode if necessary)
+            data = f.read()
+            if type(data) == str:
+                data = data.encode("UTF-8")
+            self.wfile.write(data)
             f.close()
             return
-
-        # Send the file (encode if necessary)
-        data = f.read()
-        if type(data) == str:
-            data = data.encode("UTF-8")
-        self.wfile.write(data)
-        f.close()
-        return
+        #################
+        # *box handling #
+        #################
+        elif self.path.startswith("/box/"):
+            self.respond(200,[("Content-type","text/html")])
+            htgen.box(self.wfile, self.path[3:])
+        
+        ###################
+        # Thread handling #
+        ###################
+        elif self.path.startswith("/thread/"):
+            self.respond(200,[("Content-type","text/html")])
+            htgen.thread(self.wfile, self.path[8:])
         
     def respond(self,code,headers=[],cache=False): # list of tuples
         self.send_response(code)
@@ -214,20 +143,18 @@ def has_session_cookie(cookies):
     except KeyError:
         return False
 
-FILE_PATTERN = re.compile(".*\..{1,4}$")
-def is_content(path):
+FILE_PATTERN = re.compile(".*\.[a-zA-Z\d_]+$")
+def is_file(path):
     if FILE_PATTERN.match(path):
         return True
 
 def lacks_trailing_slash(path):
     return (("." not in path) and (not path.endswith("/")))
 
-def run(server_class, server_handler):
+def run(server_class=HTTPServer, server_handler=RequestHandler):
     server_address = ("", 8000)
     httpd = server_class(server_address, server_handler)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         httpd.socket.close()
-
-run(HTTPServer, RequestHandler)

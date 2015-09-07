@@ -1,7 +1,8 @@
-import webbrowser
+import webbrowser #todo
+#webbrowser.open("http://localhost:8998")
 
-import httpd
+from modules import httpd
+from modules import database
 
-
-
-webbrowser.open("http://localhost:8998")
+database.connect()
+httpd.run()

@@ -22,7 +22,7 @@ def init():
     cur.execute("CREATE TABLE IF NOT EXISTS Accounts (id INTEGER PRIMARY KEY, address TEXT UNIQUE,\
                                                       in_username TEXT, in_host TEXT, in_port INT,\
                                                       out_username TEXT, out_host TEXT, out_port INT)")
-    cur.execute("CREATE TABLE IF NOT EXISTS Inbox (id TEXT UNIQUE, account INTEGER, data TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS Inbox (id TEXT UNIQUE, account INTEGER, data TEXT, read INT)")
     disconnect()
 
 ##################
@@ -52,18 +52,22 @@ def add_account(address, in_username, in_host, in_port,
                                                                                                 out_host,
                                                                                                 out_port))
 
+
 def delete_account(address):
     cur.execute("DELETE FROM Accounts WHERE address = ?" (address,))
 
 
 # Inbox
-# (id TEXT UNIQUE, account INTEGER, data TEXT)
+# (id TEXT UNIQUE, account INTEGER, data TEXT, read INT)
 
 def add_raw_message(accid, rawdata):
     # Extract the Message-ID
-    msgid = email.message_from_string(rawdata).get('Message-ID')
-    cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data) VALUES(?,?,?)", (msgid,accid,rawdata))
+    msgid = email.message_from_string(rawdata.decode()).get('Message-ID')
+    cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data,read) VALUES(?,?,?,?)", (msgid,accid,rawdata,0))
 
 def delete_message(msgid):
     cur.execute("DELETE FROM Inbox WHERE msgid = ?",(msgid,))
 
+def get_inbox():  #todo spam=false
+    cur.execute("SELECT data,read FROM Inbox;")
+    return cur.fetchall()

@@ -26,12 +26,16 @@ Inbox
 
 
 ##### TODO #####
-** tagging **
-** GUI     **
+Add sent messages to outbox
+Implement "thread" page
+Mark messages as read when their thread page is viewed
+Post requests: Refresh, Send-message
+Refresh feature (and password caching for it)
+
 ## MISC ##
 DB UNIQUE errors should make themselves known
-more DB fields for messages?
-cache pass once entered for use with subsequent refreshes?, also...
+
+cache pass once entered for use with subsequent refreshes
 password input from browser / better password handling (no getpass)
 html-to-plaintext messages for those with no plain counterpart
 send confirmation dialog

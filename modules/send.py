@@ -16,7 +16,7 @@ from email.mime.text import MIMEText
 import random
 from datetime import datetime
 
-import database
+from modules import database
 
 
 def send_message(from_address, to_address, message):
