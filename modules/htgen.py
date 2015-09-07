@@ -44,10 +44,22 @@ def get_messages_list(boxtype):
         raw_msgs = database.get_outbox()
     else:
         raise ValueError("Unknown boxtype: "+boxtype)
+
+    # Sorting by date   
+    DATE_INDEX = 1 
+    try:
+        import operator
+    except ImportError:
+        sortkey = key=operator.itemgetter(DATE_INDEX)
+    else:
+        sortkey = lambda x: x[DATE_INDEX]
+    raw_msgs.sort(key=sortkey, reverse=True)
+
+    # Adding messages
     msgs = ""
     for raw_msg in raw_msgs:
         body = raw_msg[0]
-        if raw_msg[1] == 1: # is read?
+        if raw_msg[2] == 1: # is read?
             weight = "bold"
         else:
             weight = "normal"

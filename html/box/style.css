@@ -179,6 +179,5 @@ div.info.whatwhenbox
 {
     font-size:10px;
     margin-left:36%; /* same as whobox.max-width + whobox.margin-left*/
-    max-width: 50%;
 }
 div.whatwhenbox > div.date {color:#AAA;}

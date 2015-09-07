@@ -4,6 +4,7 @@
 
 import sqlite3
 import email
+import time
 
 def connect():
     global cur
@@ -22,7 +23,7 @@ def init():
     cur.execute("CREATE TABLE IF NOT EXISTS Accounts (id INTEGER PRIMARY KEY, address TEXT UNIQUE,\
                                                       in_username TEXT, in_host TEXT, in_port INT,\
                                                       out_username TEXT, out_host TEXT, out_port INT)")
-    cur.execute("CREATE TABLE IF NOT EXISTS Inbox (id TEXT UNIQUE, account INTEGER, data TEXT, read INT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS Inbox (id TEXT UNIQUE, account INTEGER, data TEXT, date INT, read INT)")
     disconnect()
 
 ##################
@@ -58,16 +59,18 @@ def delete_account(address):
 
 
 # Inbox
-# (id TEXT UNIQUE, account INTEGER, data TEXT, read INT)
+# (id TEXT UNIQUE, account INTEGER, data TEXT, date INT, read INT)
 
 def add_raw_message(accid, rawdata):
     # Extract the Message-ID
-    msgid = email.message_from_string(rawdata.decode()).get('Message-ID')
-    cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data,read) VALUES(?,?,?,?)", (msgid,accid,rawdata,1))
+    msgobj = email.message_from_string(rawdata.decode())
+    id = msgobj.get("Message-ID")
+    date = time.mktime(email.utils.parsedate(msgobj.get("Date")))
+    cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data,date,read) VALUES(?,?,?,?,?)", (id,accid,rawdata,date,1))
 
 def delete_message(msgid):
     cur.execute("DELETE FROM Inbox WHERE msgid = ?",(msgid,))
 
 def get_inbox():  #todo spam=false
-    cur.execute("SELECT data,read FROM Inbox;")
+    cur.execute("SELECT data,date,read FROM Inbox;")
     return cur.fetchall()

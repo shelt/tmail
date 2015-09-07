@@ -15,16 +15,6 @@ database: code related to storing and retrieving data from the database. SQL que
 
 
 
-##### Database Model #####
-
-Accounts
-(id INTEGER PRIMARY KEY, address TEXT UNIQUE, in_username TEXT, in_host TEXT, in_port INT,
-                                              out_username TEXT, out_host TEXT, out_port INT)
-
-Inbox
-(id TEXT UNIQUE, account INTEGER, data TEXT)
-
-
 ##### TODO #####
 Refresh: get or post?
 Sort date list by recency
