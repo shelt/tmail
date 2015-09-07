@@ -26,10 +26,11 @@ Inbox
 
 
 ##### TODO #####
+Refresh: get or post?
+Post requests: Send-message
 Add sent messages to outbox
 Implement "thread" page
 Mark messages as read when their thread page is viewed
-Post requests: Refresh, Send-message
 Refresh feature (and password caching for it)
 
 ## MISC ##
