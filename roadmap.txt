@@ -35,7 +35,7 @@ Refresh feature (and password caching for it)
 
 ## MISC ##
 DB UNIQUE errors should make themselves known
-
+set max sizes of UI elements to prevent distortion - hide some elements (bars) when DOM becomes too small
 cache pass once entered for use with subsequent refreshes
 password input from browser / better password handling (no getpass)
 html-to-plaintext messages for those with no plain counterpart
