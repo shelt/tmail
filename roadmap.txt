@@ -8,7 +8,9 @@ database: code related to storing and retrieving data from the database. SQL que
 
 
 ##### TODO #####
-! do CSS for thread pages
+! do CSS for thread pages:
+    Turn quoted "> " text into {...} so it is hidden but showable
+    Move todo button to bottom and make it reply; add more buttons
 make "Compose" indented when it's selected (through javascript)
 thread view: only show one message per thread while still showing unread status and last time
 refresh button on box page
