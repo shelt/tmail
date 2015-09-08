@@ -3,8 +3,8 @@
 <head>
     <title>ｔ in</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js"></script> 
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/script.js"></script> 
 </head>
 <body>
     <div class="topbar">
@@ -12,24 +12,353 @@
     </div>
     <div class="sidebar">
         <ol class="sidelinks">
+            <li class="sidelink"><a id="sidelink-refresh" href="/compose">Compose</a></li>
+            <li class="divider"></li>
             <li class="sidelink"><a id="sidelink-inbox" href="http://localhost:8000/box/in">Inbox</a></li>
             <li class="sidelink"><a id="sidelink-outbox" href="http://localhost:8000/box/out">Outbox</a></li>
-
-            <form id="refresh" method="post" action="#">
-            <li class="sidelink" id="refresh"><button type="submit" form="refresh" value="refresh">Refresh</button></li>
         </ol>
     </div>
     <div class="contentarea">
         <ol class="messages">
             
-            <li class="message">
-                <a href="/thread/&lt;1106182307.98048.1441434237579.JavaMail.open-xchange@app4.ox.privateemail.com&gt;">
-                    <div class="info sender">Sam Shelton &lt;sam@shelt.ca&gt;</div>
-                    <div class="info recipient">sam &lt;sam@shelt.ca&gt;</div>
-                    <div class="info subject" style="font-weight: normal;">Test</div>
-                    <div class="info date">Sat, 5 Sep 2015 02:23:57 -0400 (EDT)</div>
-                </a>
-            </li>
+                <li class="message">
+                    <a href="/thread/&lt;1106182307.98048.1441434237579.JavaMail.open-xchange@app4.ox.privateemail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                            <div class="recipient">sam &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Test</div>
+                            <div class="date">Sat, 5 Sep 2015 02:23:57 -0400 (EDT)</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;428224294.98037.1441433930311.JavaMail.open-xchange@app4.ox.privateemail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                            <div class="recipient">sam &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Fwd: Test</div>
+                            <div class="date">Sat, 5 Sep 2015 02:18:50 -0400 (EDT)</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CA+6pc2BhZinwSjz8Fup6vJ1hQPZVg8TNMEmEQ=LqptG-53hsOg@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Sam Shelton &lt;samsheltonmail@gmail.com&gt;</div>
+                            <div class="recipient">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Test message</div>
+                            <div class="date">Sat, 5 Sep 2015 00:16:31 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CADcKMnUBNUj1euPr5fTBmGGRsututKhZ5rbc69tUWeCHFc+omQ@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Nicholas Stein &lt;nastein77@gmail.com&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Youtube Playlist Snapshot Program</div>
+                            <div class="date">Mon, 31 Aug 2015 20:35:30 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;torvalds/linux/pull/200/c135580587@github.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Yuxuan Chen &lt;notifications@github.com&gt;</div>
+                            <div class="recipient">torvalds/linux &lt;linux@noreply.github.com&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: [linux] Update README (#200)</div>
+                            <div class="date">Thu, 27 Aug 2015 16:20:07 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;torvalds/linux/pull/200/c135548071@github.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">slaven-s &lt;notifications@github.com&gt;</div>
+                            <div class="recipient">torvalds/linux &lt;linux@noreply.github.com&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: [linux] Update README (#200)</div>
+                            <div class="date">Thu, 27 Aug 2015 13:37:57 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;shelt/AurOracle/issues/3/135478951@github.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Daniel &lt;notifications@github.com&gt;</div>
+                            <div class="recipient">shelt/AurOracle &lt;AurOracle@noreply.github.com&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: [AurOracle] Logging (#3)</div>
+                            <div class="date">Thu, 27 Aug 2015 09:03:42 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;shelt/AurOracle/issues/3@github.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Daniel &lt;notifications@github.com&gt;</div>
+                            <div class="recipient">shelt/AurOracle &lt;AurOracle@noreply.github.com&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">[AurOracle] Logging (#3)</div>
+                            <div class="date">Thu, 27 Aug 2015 08:58:41 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;shelt/AurOracle/issues/2@github.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Daniel &lt;notifications@github.com&gt;</div>
+                            <div class="recipient">shelt/AurOracle &lt;AurOracle@noreply.github.com&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">[AurOracle] UI (#2)</div>
+                            <div class="date">Thu, 27 Aug 2015 08:57:49 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;20150826092721.0C8A63900AFE@server.masterorange.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">&quot;CarpetsPrint&quot; &lt;info@carpetsprint.com&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">LOGO MAT</div>
+                            <div class="date">Wed, 26 Aug 2015 08:36:01 +0000</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CA+6pc2A+pZBho5sPAtS6QEAY1JsG9ZffNAozL4yvB5jxFjMsew@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                            <div class="recipient">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: Grades &amp; account summary</div>
+                            <div class="date">Mon, 24 Aug 2015 17:21:01 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;OFEFB9D0C8.D446B9D8-ON86257EAB.00686680-86257EAB.00688357@johnstongroup.ca&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Norm.Shelton@johnstongroup.ca</div>
+                            <div class="recipient">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: Grades &amp; account summary</div>
+                            <div class="date">Mon, 24 Aug 2015 14:01:32 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;torvalds/linux/pull/200/c134306808@github.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Landon Powell &lt;notifications@github.com&gt;</div>
+                            <div class="recipient">torvalds/linux &lt;linux@noreply.github.com&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: [linux] Update README (#200)</div>
+                            <div class="date">Mon, 24 Aug 2015 10:25:18 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;torvalds/linux/pull/200/c133798713@github.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">marc &lt;notifications@github.com&gt;</div>
+                            <div class="recipient">torvalds/linux &lt;linux@noreply.github.com&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: [linux] Update README (#200)</div>
+                            <div class="date">Sun, 23 Aug 2015 01:12:38 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;55cdcb6da97fc_10383fed26a372a079697@github-fe142-cp1-prd.iad.github.net.mail&gt;">
+                        <div class="info whobox">
+                            <div class="sender">GitHub &lt;noreply@github.com&gt;</div>
+                            <div class="recipient">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">[GitHub] A new public key was added to your account</div>
+                            <div class="date">Fri, 14 Aug 2015 04:05:17 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CAE=zYJhQSxZBOGsiztmTbHf6FocDirZbzM9fntnRXxQe2REk=w@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Peggy Babcock &lt;pbabcock46@gmail.com&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">It&#x27;s 10 minutes later ....</div>
+                            <div class="date">Thu, 16 Jul 2015 08:09:27 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;20cf30780c62d44757051add9214@google.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">suzanneheho@gmail.com</div>
+                            <div class="recipient">sam@shelt.ca, suzanneheho@gmail.com</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">[Update] Thursday Attunement Group</div>
+                            <div class="date">Tue, 14 Jul 2015 22:43:57 +0000</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CAHQP_Bh_X71rxsod2JsTjm+SdNWY=+0AJaDT1w7KTwYQ+bRLLg@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Suzanne Shelton &lt;suzanneheho@gmail.com&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">y</div>
+                            <div class="date">Tue, 14 Jul 2015 17:32:02 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;7A520E9D-CF95-46F1-A4AB-2006AFFA128B@me.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Suzanne Shelton &lt;suzanne101@me.com&gt;</div>
+                            <div class="recipient">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: Next week work schedule</div>
+                            <div class="date">Fri, 12 Jun 2015 07:38:31 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;55765dfc4acc3_4bc83f9f004912c0943e3@github-fe136-cp1-prd.iad.github.net.mail&gt;">
+                        <div class="info whobox">
+                            <div class="sender">GitHub &lt;noreply@github.com&gt;</div>
+                            <div class="recipient">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">[GitHub] A new public key was added to your account</div>
+                            <div class="date">Mon, 08 Jun 2015 20:31:08 -0700</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;AB0370C1-7C14-4F01-852B-8E94C29A46DD@cs.umanitoba.ca&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Mike Domaratzki &lt;mdomarat@cs.umanitoba.ca&gt;</div>
+                            <div class="recipient">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Re: question about auroracle / full courses</div>
+                            <div class="date">Mon, 8 Jun 2015 13:38:30 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;A153D71E-9D57-4073-A781-846C989C9EAA@cs.umanitoba.ca&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Mike Domaratzki &lt;mdomarat@cs.umanitoba.ca&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">question about auroracle / full courses</div>
+                            <div class="date">Mon, 8 Jun 2015 09:16:15 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;557259c891f15_33fda2f118b1014384e4@b1e37036-6d90-4b64-be6f-7b7cf7c1e978.mail&gt;">
+                        <div class="info whobox">
+                            <div class="sender">putsmail@litmus.com</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Would you like to receive email drafts?</div>
+                            <div class="date">Sat, 06 Jun 2015 02:24:08 +0000</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CA+6pc2DBwc-1Fb2rOBKT4ayR6xbXQaTR2yv_ngohKFu_ZNZ-_g@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Sam Shelton &lt;sam@shelt.ca&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Test</div>
+                            <div class="date">Fri, 5 Jun 2015 20:31:27 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CA+6pc2A2ZOk9RjGiQZkHpkjvBm6zZFrGj-mA2yAFUEQ0RAKERg@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Gmail Team &lt;send-as-noreply@google.com&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Gmail Confirmation - Send Mail as sam@shelt.ca</div>
+                            <div class="date">Fri, 5 Jun 2015 20:09:41 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
+                <li class="message">
+                    <a href="/thread/&lt;CA+6pc2AtS-X7SbiUNUKB993-9x=tbu5ZE_sN60Fq5xFe-xqV6g@mail.gmail.com&gt;">
+                        <div class="info whobox">
+                            <div class="sender">Sam Shelton &lt;samsheltonmail@gmail.com&gt;</div>
+                            <div class="recipient">sam@shelt.ca</div>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: bold;">Test</div>
+                            <div class="date">Fri, 5 Jun 2015 20:00:21 -0500</div>
+                        </div>
+                        
+                    </a>
+                </li>
         </ol>
     </div>
 </body>

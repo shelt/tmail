@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Code related to serving hypertext.
+# Code related to serving hypertext, recieving requests and parsing
 
 import sys,os
 import re
@@ -125,7 +125,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         ###################
         elif path.startswith("/thread/"):
             self.respond(200,[("Content-type","text/html")])
-            htgen.thread(self.wfile, path[8:]) # 8 is the length of "/thread/"
+            htgen.thread(self.wfile, parse.unquote(path[8:])) # 8 is the length of "/thread/"
         
     def respond(self,code,headers=[],cache=False): # list of tuples
         self.send_response(code)

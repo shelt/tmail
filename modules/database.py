@@ -24,6 +24,7 @@ def init():
                                                       in_username TEXT, in_host TEXT, in_port INT,\
                                                       out_username TEXT, out_host TEXT, out_port INT)")
     cur.execute("CREATE TABLE IF NOT EXISTS Inbox (id TEXT UNIQUE, account INTEGER, data TEXT, date INT, read INT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS Outbox (id TEXT UNIQUE, account INTEGER, data TEXT, date INT)")
     disconnect()
 
 ##################
@@ -67,13 +68,25 @@ def delete_account(address):
 
 def add_raw_message(accid, rawdata):
     # Extract the Message-ID
-    msgobj = email.message_from_string(rawdata.decode())
+    msgobj = email.message_from_string(rawdata.decode("utf-8"))
     id = msgobj.get("Message-ID")
     date = time.mktime(email.utils.parsedate(msgobj.get("Date")))
     cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data,date,read) VALUES(?,?,?,?,?)", (id,accid,rawdata,date,1))
 
 def delete_message(msgid):
     cur.execute("DELETE FROM Inbox WHERE msgid = ?",(msgid,))
+
+def get_message(msgid, mark_read=False):
+    if mark_read:
+        cur.execute("UPDATE Inbox SET read=1 WHERE id=?",(msgid,))
+
+    retval = cur.execute("SELECT data FROM Inbox WHERE id = ?",(msgid,)).fetchone()
+    if not retval:
+        retval = cur.execute("SELECT data FROM Outbox WHERE id = ?",(msgid,)).fetchone()
+    if not retval:
+        return None
+    else:
+        return retval[0]
 
 def get_inbox():  #todo spam=false
     cur.execute("SELECT data,date,read FROM Inbox;")

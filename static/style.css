@@ -91,9 +91,10 @@ li.sidelink > a
 }
 
 
-/*
+/*******************
     CONTENT AREA
-*/
+*******************/
+
 div.contentarea
 {
     width:100%;
@@ -103,9 +104,7 @@ div.contentarea
     left:10%;
 }
 
-/*
-    MESSAGE CONTENT
-*/
+/***** MESSAGE CONTENT  *****/
 ol.messages
 {
     width:90%;
@@ -161,3 +160,14 @@ div.info.whatwhenbox
     margin-left:36%; /* same as whobox.max-width + whobox.margin-left*/
 }
 div.whatwhenbox > div.date {color:#AAA;}
+
+
+
+
+/***** THREAD CONTENT  *****/
+
+li.threadmessage div.body
+{
+    color:red;
+    white-space: pre-wrap;
+}

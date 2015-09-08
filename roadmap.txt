@@ -1,11 +1,3 @@
-##### DEFINITIONS #####
-INBOX:
-A collection of messages that were addressed to a certain account.
-Messages are stored collectively and have a field for which account they were sent to.
-
-OUTBOX:
-A collection of messages that were sent by a certain account *from this client*.
-
 ##### Code Modules #####
 retrieve: code related to retrieving data from mailservers
 send:     code related to sending data to a MTA
@@ -16,6 +8,8 @@ database: code related to storing and retrieving data from the database. SQL que
 
 
 ##### TODO #####
+! do CSS for thread pages
+make "Compose" indented when it's selected (through javascript)
 thread view: only show one message per thread while still showing unread status and last time
 refresh button on box page
 Format time into: sept 05 20:09 (5m ago)

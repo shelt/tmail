@@ -2,13 +2,12 @@
 
 # Code that generates html dynamically.
 from html import escape
+import urllib
 import email
 
 from modules import database
 
-
-def box(wfile, boxtype):
-    wfile.write("""
+TEMPLATE = """
 <!doctype html>
 <head>
     <title>ｔ {title}</title>
@@ -32,9 +31,12 @@ def box(wfile, boxtype):
         {content}
     </div>
 </body>
-""".format(title=boxtype+"box", logo="tmail."+boxtype+"box", content=get_message_content(boxtype)).encode("UTF-8"))
+""" 
 
-def get_message_content(boxtype):
+def box(wfile, boxtype):
+    wfile.write(TEMPLATE.format(title=boxtype+"box", content=get_box_content(boxtype)).encode("UTF-8"))
+
+def get_box_content(boxtype):
     if boxtype == "in":
         raw_msgs = database.get_inbox()
     elif boxtype == "out":
@@ -56,12 +58,11 @@ def get_message_content(boxtype):
     msgs = """<ol class="messages">
 """
     for raw_msg in raw_msgs:
-        body = raw_msg[0]
         if raw_msg[2] == 1: # is read?
             weight = "bold"
         else:
             weight = "normal"
-        msg = email.message_from_string(body)
+        msg = email.message_from_string(raw_msg[0])
         msgid  = escape(msg.get("Message-ID"))
         sender = escape(msg.get("From"))
         recip  = escape(msg.get("To"))
@@ -92,10 +93,61 @@ def get_message_content(boxtype):
 
 
 
+def thread(wfile, rootid):
+    wfile.write(TEMPLATE.format(title="thread", content=get_thread_content(rootid)).encode("UTF-8"))
 
 
+def get_thread_content(rootid):
+    msgs = """<lo class="threadmessages">
+"""
+    currid = rootid
+    while True:
+        result = get_thread_message(currid)
+        msgs += result[0]
+        currid = result[1]
+        if currid == None or currid == "None":
+            break
+    msgs += "</ol>"
+    return msgs
 
+# Called recursively get_thread_content
+def get_thread_message(msgid):
+    msg = email.message_from_string(database.get_message(msgid, mark_read=True))
+    if not msg:
+        return ('<li class="threadmessage">[Message not found]<br>'+msgid+'</li>',None)
+    subj      = escape(str(msg.get("Subject")))
+    msgid     = escape(str(msg.get("Message-ID")))
+    sender    = escape(str(msg.get("From")))
+    recip     = escape(str(msg.get("To")))
+    date      = escape(str(msg.get("Date")))
+    cc        = escape(str(msg.get("Cc")))
+    bcc       = escape(str(msg.get("Bcc")))
+    inreplyto = escape(str(msg.get("In-Reply-To")))
+    body      = escape(str(get_message_body(msg)))
 
+    msg_html = """
+            <li class="threadmessage">
+                <div class="subject">{subj}</div>
+                <div class="infobox">
+                    <div class="msgid">{msgid}</div>
+                    <div class="sender">{sender}</div>
+                    <div class="recipient">{recip}</div>
+                    <div class="date">{date}</div>
+                    <div class="cc">{cc}</div>
+                    <div class="bcc">{bcc}</div>
+                    <div class="inreplyto">{inreplyto}</div>
+                    <div class="extended-toggle" onclick="toggleExtended">...</div>
+                </div>
+                <div class="body">{body}</div>
+            </li>""".format(subj=subj, msgid=msgid, sender=sender, recip=recip, date=date, cc=cc, bcc=bcc, inreplyto=inreplyto, body=body)
+    return (msg_html,inreplyto)
 
-def thread(wfile, threadid):
-    
+def get_message_body(msg):
+    if msg.is_multipart():
+        for part in msg.walk():
+            if part.get_content_type() == 'text/plain':
+                return part.get_payload()
+    elif msg.get_content_type() == 'text/plain':
+        return msg.get_payload()
+    else:
+        return "Message is HTML. TODO: implement HTML-To-Plain parsing."
