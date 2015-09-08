@@ -68,7 +68,7 @@ def delete_account(address):
 
 def add_raw_message(accid, rawdata):
     # Extract the Message-ID
-    msgobj = email.message_from_string(rawdata.decode("utf-8"))
+    msgobj = email.message_from_string(rawdata)
     id = msgobj.get("Message-ID")
     date = time.mktime(email.utils.parsedate(msgobj.get("Date")))
     cur.execute("INSERT OR IGNORE INTO Inbox (id,account,data,date,read) VALUES(?,?,?,?,?)", (id,accid,rawdata,date,1))

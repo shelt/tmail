@@ -25,6 +25,6 @@ def retrieve(address=None):
             data = data_part[0][1]
             
             # Insert into mail db
-            database.add_raw_message(accid, data)
+            database.add_raw_message(accid, data.decode("utf-8"))
         m.close()
         m.logout()

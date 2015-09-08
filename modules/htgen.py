@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 # Code that generates html dynamically.
-from html import escape
+from html import escape as html_escape
+from html import unescape as html_unescape
 import urllib
 import email
 
@@ -98,7 +99,7 @@ def thread(wfile, rootid):
 
 
 def get_thread_content(rootid):
-    msgs = """<lo class="threadmessages">
+    msgs = """<ol class="threadmessages">
 """
     currid = rootid
     while True:
@@ -115,32 +116,51 @@ def get_thread_message(msgid):
     msg = email.message_from_string(database.get_message(msgid, mark_read=True))
     if not msg:
         return ('<li class="threadmessage">[Message not found]<br>'+msgid+'</li>',None)
-    subj      = escape(str(msg.get("Subject")))
-    msgid     = escape(str(msg.get("Message-ID")))
-    sender    = escape(str(msg.get("From")))
-    recip     = escape(str(msg.get("To"))) # todo this str() is used here to turn None into 'None'. That's dirty and unacceptable.
-    date      = escape(str(msg.get("Date")))
-    cc        = escape(str(msg.get("Cc")))
-    bcc       = escape(str(msg.get("Bcc")))
-    inreplyto = escape(str(msg.get("In-Reply-To")))
-    body      = escape(str(get_message_body(msg)))
+    subj      = escape(msg.get("Subject"))
+    msgid     = escape(msg.get("Message-ID"))
+    sender    = escape(msg.get("From"))
+    recip     = escape(msg.get("To")).replace(",","<br>")
+    date      = escape(msg.get("Date"))
+    cc        = escape(msg.get("Cc")).replace(",","<br>")
+    bcc       = escape(msg.get("Bcc")).replace(",","<br>")
+    inreplyto = escape(msg.get("In-Reply-To"))
+    body      = escape(get_message_body(msg))
 
     msg_html = """
             <li class="threadmessage">
-                <div class="subject">{subj}</div>
-                <div class="infobox">
-                    <div class="msgid">{msgid}</div>
-                    <div class="sender">{sender}</div>
-                    <div class="recipient">{recip}</div>
-                    <div class="date">{date}</div>
-                    <div class="cc">{cc}</div>
-                    <div class="bcc">{bcc}</div>
-                    <div class="inreplyto">{inreplyto}</div>
+                <div class="threadmessage">
+                    <div class="subject">{subj}</div>
+                    <table class="infobox">
+                        <tr class="info "id="msgid">
+                            <td class="prefix">ID:</td>
+                            <td class="value">{msgid}</td>
+                        </tr>
+                        <tr class="info "id="sender">
+                            <td class="prefix">From:</td>
+                            <td class="value">{sender}</td>
+                        </tr>
+                        <tr class="info "id="recipient">
+                            <td class="prefix">To:</td>
+                            <td class="value">{recip}</td>
+                        </tr>
+                        <tr class="info "id="date">
+                            <td class="prefix">Date:</td>
+                            <td class="value">{date}</td>
+                        </tr>
+                        <tr class="info "id="cc">
+                            <td class="prefix">CC:</td>
+                            <td class="value">{cc}</td>
+                        </tr>
+                        <tr class="info "id="bcc">
+                            <td class="prefix">BCC:</td>
+                            <td class="value">{bcc}</td>
+                        </tr>
+                    </table>
                     <div class="extended-toggle" onclick="toggleExtended">...</div>
+                    <div class="body">{body}</div>
                 </div>
-                <div class="body">{body}</div>
             </li>""".format(subj=subj, msgid=msgid, sender=sender, recip=recip, date=date, cc=cc, bcc=bcc, inreplyto=inreplyto, body=body)
-    return (msg_html,inreplyto)
+    return (msg_html,unescape(inreplyto))
 
 def get_message_body(msg):
     if msg.is_multipart():
@@ -151,3 +171,14 @@ def get_message_body(msg):
         return msg.get_payload()
     else:
         return "Message is HTML. TODO: implement HTML-To-Plain parsing."
+
+
+# Fix html module functions to handle None inputs
+def escape(string):
+    if string is None:
+        return "None"
+    return html_escape(string)
+def unescape(string):
+    if string is None:
+        return "None"
+    return html_unescape(string)
