@@ -8,6 +8,10 @@ database: code related to storing and retrieving data from the database. SQL que
 
 
 ##### TODO #####
+mark-all-as-read button
+two equal-sized buttons on the right side of every entry in the box lists:mark as read, delete (with confirmation alert)
+javascript to hide/show infobox "extras"
+hide/show quoted text; javascript or server?
 Linkify hyperlinks in the body
 ! do CSS for thread pages:
     Turn quoted "> " text into {...} so it is hidden but showable
