@@ -9,9 +9,9 @@
 # Linux trash folder which might appear on any partition or disk
 .Trash-*
 
-# Data directory contains user info
+# User directories
 data
-
+attachments
 
 # TODO
 # Testing files/dirs that contain personal info (only temporary)
