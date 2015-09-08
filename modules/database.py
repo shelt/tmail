@@ -34,9 +34,13 @@ def init():
 #(id INTEGER PRIMARY KEY, address TEXT UNIQUE, in_username TEXT, in_host TEXT, in_port INT,
 #                                              out_username TEXT, out_host TEXT, out_port INT)
 
-def get_incoming_credentials(address):
-    cur.execute("SELECT id,in_username,in_host,in_port FROM Accounts WHERE address = ?", (address,))
-    return cur.fetchone()
+def get_incoming_credentials(address=None):
+    if address is None:
+        cur.execute("SELECT id,in_username,in_host,in_port FROM Accounts")
+        return cur.fetchall()
+    else:
+        cur.execute("SELECT id,in_username,in_host,in_port FROM Accounts WHERE address = ?", (address,))
+        return [cur.fetchone()]
 
 def get_outgoing_credentials(address):
     cur.execute("SELECT id,out_username,out_host,out_port FROM Accounts WHERE address = ?", (address,))

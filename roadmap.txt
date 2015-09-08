@@ -16,14 +16,14 @@ database: code related to storing and retrieving data from the database. SQL que
 
 
 ##### TODO #####
-Refresh: get or post?
-Sort date list by recency
+thread view: only show one message per thread while still showing unread status and last time
+refresh button on box page
 Format time into: sept 05 20:09 (5m ago)
-Post requests: Send-message
+compose page and post request
 Add sent messages to outbox
 Implement "thread" page
 Mark messages as read when their thread page is viewed
-Refresh feature (and password caching for it)
+password caching
 
 ## MISC ##
 DB UNIQUE errors should make themselves known

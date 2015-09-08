@@ -10,6 +10,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.cookies import SimpleCookie
 
 from modules import htgen
+from modules import retrieve
 
 # Content-Types associated with extensions
 CTYPE_PATH = {
@@ -73,21 +74,29 @@ class RequestHandler(BaseHTTPRequestHandler):
     
         
     def do_GET(self):
-        print(self.path)
-        self.path = self.path.rstrip("/")
+        request = parse.urlparse(self.path)
+        params = parse.parse_qs(request.query)
+        path = request.path.rstrip("/") # So it's just "static/..."
+
+        if params:
+            if "refresh" in params:
+                retrieve.retrieve()
+                self.respond(302,[("Location",path)])
+                return
         #################
         # File handling #
         #################
-        if is_file(self.path):
-            self.path = "html" + self.path
+        if path.startswith("/static/") and is_file(path):
+            print("GET "+path)
+            path = path.lstrip("/")
 
             # Get Content-Type
-            _,ext = os.path.splitext(self.path)
+            _,ext = os.path.splitext(path)
             # Open the file
             if CTYPE_ISBINARY[ext]:
-                f = open(self.path, 'rb')#, errors='ignore')
+                f = open(path, 'rb')#, errors='ignore')
             else:
-                f = open(self.path)
+                f = open(path)
             
             # Respond
             try:
@@ -107,16 +116,16 @@ class RequestHandler(BaseHTTPRequestHandler):
         #################
         # *box handling #
         #################
-        elif self.path.startswith("/box/"):
+        elif path.startswith("/box/"):
             self.respond(200,[("Content-type","text/html")])
-            htgen.box(self.wfile, self.path[5:])
+            htgen.box(self.wfile, path[5:]) # 5 is the length of "/box/"
         
         ###################
         # Thread handling #
         ###################
-        elif self.path.startswith("/thread/"):
+        elif path.startswith("/thread/"):
             self.respond(200,[("Content-type","text/html")])
-            htgen.thread(self.wfile, self.path[8:])
+            htgen.thread(self.wfile, path[8:]) # 8 is the length of "/thread/"
         
     def respond(self,code,headers=[],cache=False): # list of tuples
         self.send_response(code)
