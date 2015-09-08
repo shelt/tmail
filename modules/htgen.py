@@ -129,8 +129,12 @@ def get_thread_message(msgid):
     msg_html = """
             <li class="threadmessage">
                 <div class="threadmessage">
-                    <div class="subject">{subj}</div>
+                    <div class="threadbutton">todo</div>
                     <table class="infobox">
+                        <tr class="info "id="subject">
+                            <td class="prefix">Subj:</td>
+                            <td class="value" style="font-weight:bold;">{subj}</td>
+                        </tr>
                         <tr class="info "id="msgid">
                             <td class="prefix">ID:</td>
                             <td class="value">{msgid}</td>

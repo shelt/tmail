@@ -184,7 +184,7 @@ div.threadmessage
 {
     margin-left:1%;
 }
-div.threadmessage > div.subject
+div.threadmessage > div.threadbutton
 {
     display:block;
     padding-left:1%;
@@ -213,6 +213,11 @@ tr.info > td.prefix
     color:#AAA;
     vertical-align: top;
 }
+
+/* Extended info hiding */
+tr.info#msgid {display:none;}
+tr.info#cc {display:none;}
+tr.info#bcc {display:none;}
 
 
 li.threadmessage div.body
