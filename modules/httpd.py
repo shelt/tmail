@@ -86,7 +86,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         #################
         # File handling #
         #################
-        if path.startswith("/static/") and is_file(path):
+        if path.startswith("/static/") or path.startswith("/attachment/") and is_file(path):
             print("GET "+path)
             path = path.lstrip("/")
 

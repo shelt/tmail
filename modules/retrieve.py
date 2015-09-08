@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Code related to retrieving data from mailservers.
+
 # This module uses IMAP4 to retrieve raw message data
 # from mailservers. It will import such data into the
 # sqlite database.

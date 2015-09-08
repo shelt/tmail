@@ -1,14 +1,19 @@
 #!/usr/bin/env python
 
 # Code that generates html dynamically.
+import os
 from html import escape as html_escape
 from html import unescape as html_unescape
 import urllib
 import email
+import mimetypes
 
 from modules import database
 
-TEMPLATE = """
+ATTACHMENT_DIRECTORY = "attachment/"
+ATTACHMENT_TEMPLATE = """<span class="attachment"><a href={path}>{filename}</a></span>\n"""
+
+MAIN_TEMPLATE = """
 <!doctype html>
 <head>
     <title>ｔ {title}</title>
@@ -35,7 +40,7 @@ TEMPLATE = """
 """ 
 
 def box(wfile, boxtype):
-    wfile.write(TEMPLATE.format(title=boxtype+"box", content=get_box_content(boxtype)).encode("UTF-8"))
+    wfile.write(MAIN_TEMPLATE.format(title=boxtype+"box", content=get_box_content(boxtype)).encode("UTF-8"))
 
 def get_box_content(boxtype):
     if boxtype == "in":
@@ -95,12 +100,11 @@ def get_box_content(boxtype):
 
 
 def thread(wfile, rootid):
-    wfile.write(TEMPLATE.format(title="thread", content=get_thread_content(rootid)).encode("UTF-8"))
+    wfile.write(MAIN_TEMPLATE.format(title="thread", content=get_thread_content(rootid)).encode("UTF-8"))
 
 
 def get_thread_content(rootid):
-    msgs = """<ol class="threadmessages">
-"""
+    msgs = """<ol class="threadmessages">\n"""
     currid = rootid
     while True:
         result = get_thread_message(currid)
@@ -124,7 +128,9 @@ def get_thread_message(msgid):
     cc        = escape(msg.get("Cc")).replace(",","<br>")
     bcc       = escape(msg.get("Bcc")).replace(",","<br>")
     inreplyto = escape(msg.get("In-Reply-To"))
-    body      = escape(get_message_body(msg))
+
+    (body,attachments) = get_message_body(msg)
+    body = escape(body)
 
     msg_html = """
             <li class="threadmessage">
@@ -162,22 +168,45 @@ def get_thread_message(msgid):
                     </table>
                     <div class="extended-toggle" onclick="toggleExtended">...</div>
                     <div class="body">{body}</div>
+                    <div class="attachments">{attachments}</div>
                 </div>
-            </li>""".format(subj=subj, msgid=msgid, sender=sender, recip=recip, date=date, cc=cc, bcc=bcc, inreplyto=inreplyto, body=body)
+            </li>""".format(subj=subj, msgid=msgid, sender=sender, recip=recip,date=date, 
+                            cc=cc, bcc=bcc, inreplyto=inreplyto, body=body, attachments=attachments)
     return (msg_html,unescape(inreplyto))
 
 def get_message_body(msg):
+    plain       = ""
+    attachments = ""
     if msg.is_multipart():
+        counter = 1
         for part in msg.walk():
             ctype = part.get_content_type()
-            if ctype == 'text/plain':
-                plain = part.get_payload()
-            elif ctype not in NON_ATTACHMENTS
-        return plain + "<br>".join(
+            cdisp = part.get("Content-Disposition")
+            if cdisp is not None and\
+            (cdisp.lower().startswith("attachment") or cdisp.lower().startswith("inline")):
+                # Set most appropriate filename
+                filename = part.get_filename()
+                if not filename:
+                    ext = mimetypes.guess_extension(part.get_content_type())
+                    if not ext:
+                        # Generic extension
+                        ext = '.bin'
+                    filename = 'untitled-%03d%s' % (counter, ext)
+
+                # Save attachment
+                counter += 1
+                with open(os.path.join(ATTACHMENT_DIRECTORY, filename), 'wb') as fp:
+                    fp.write(part.get_payload(decode=True))
+
+                # Add link to body
+                attachments += ATTACHMENT_TEMPLATE.format(path="/" + ATTACHMENT_DIRECTORY+filename,filename=filename)
+            elif ctype == 'text/plain':
+                plain += part.get_payload()
     elif msg.get_content_type() == 'text/plain':
-        return msg.get_payload()
+        plain = msg.get_payload()
     else:
-        return "Message has no text/plain part. TODO: implement HTML-To-Plain parsing."
+        plain = "Message has no text/plain part. TODO: implement HTML-To-Plain parsing."
+    return (plain,attachments)
 
 
 # Fix html module functions to handle None inputs

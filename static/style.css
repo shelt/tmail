@@ -224,3 +224,14 @@ li.threadmessage div.body
 {
     white-space: pre-wrap;
 }
+
+div.attachments
+{
+    
+}
+div.attachments > span.attachment
+{
+    font-style: italic;
+    padding-left:5px;
+    padding-right:5px;
+}
