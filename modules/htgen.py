@@ -56,7 +56,7 @@ def get_box_content(boxtype):
     raw_msgs.sort(key=sortkey, reverse=True)
 
     # Adding messages
-    msgs = """<ol class="messages">
+    msgs = """<ol class="boxmessages">
 """
     for raw_msg in raw_msgs:
         if raw_msg[2] == 1: # is read?
@@ -71,7 +71,7 @@ def get_box_content(boxtype):
         date   = escape(msg.get("Date"))
 
         msgs += """
-                <li class="message">
+                <li class="boxmessage">
                     <a href="/thread/{msgid}">
                         <div class="info whobox">
                             <div class="sender">{sender}</div>

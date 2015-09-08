@@ -104,8 +104,8 @@ div.contentarea
     left:10%;
 }
 
-/***** MESSAGE CONTENT  *****/
-ol.messages
+/***** IN/OUTBOX CONTENT  *****/
+ol.boxmessages
 {
     width:90%;
     height:90%;
@@ -113,18 +113,18 @@ ol.messages
     padding: 0;
     margin: 0;
 }
-li.message
+li.boxmessage
 {
     border-bottom:1px solid #B3B3B3;
     list-style-type:none;
     height:40px;
 }
-li.message:hover
+li.boxmessage:hover
 {
     background-color:#EEE;
     border:1px solid #B3B3B3;
 }
-li.message > a
+li.boxmessage > a
 {
     
     display:block;
