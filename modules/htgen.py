@@ -60,9 +60,9 @@ def get_box_content(boxtype):
 """
     for raw_msg in raw_msgs:
         if raw_msg[2] == 1: # is read?
-            weight = "bold"
-        else:
             weight = "normal"
+        else:
+            weight = "bold"
         msg = email.message_from_string(raw_msg[0])
         msgid  = escape(msg.get("Message-ID"))
         sender = escape(msg.get("From"))
@@ -169,12 +169,15 @@ def get_thread_message(msgid):
 def get_message_body(msg):
     if msg.is_multipart():
         for part in msg.walk():
-            if part.get_content_type() == 'text/plain':
-                return part.get_payload()
+            ctype = part.get_content_type()
+            if ctype == 'text/plain':
+                plain = part.get_payload()
+            elif ctype not in NON_ATTACHMENTS
+        return plain + "<br>".join(
     elif msg.get_content_type() == 'text/plain':
         return msg.get_payload()
     else:
-        return "Message is HTML. TODO: implement HTML-To-Plain parsing."
+        return "Message has no text/plain part. TODO: implement HTML-To-Plain parsing."
 
 
 # Fix html module functions to handle None inputs
