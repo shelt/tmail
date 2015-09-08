@@ -118,7 +118,7 @@ def get_thread_message(msgid):
     subj      = escape(str(msg.get("Subject")))
     msgid     = escape(str(msg.get("Message-ID")))
     sender    = escape(str(msg.get("From")))
-    recip     = escape(str(msg.get("To")))
+    recip     = escape(str(msg.get("To"))) # todo this str() is used here to turn None into 'None'. That's dirty and unacceptable.
     date      = escape(str(msg.get("Date")))
     cc        = escape(str(msg.get("Cc")))
     bcc       = escape(str(msg.get("Bcc")))
