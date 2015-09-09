@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-# Code that generates html dynamically.
+# Code related to generating dynamic HTML content
+
 import os
 from html import escape as html_escape
 from html import unescape as html_unescape
@@ -10,7 +11,7 @@ import mimetypes
 
 from modules import database
 
-ATTACHMENT_DIRECTORY = "attachment/"
+ATTACHMENT_DIRECTORY = "attachments/"
 ATTACHMENT_TEMPLATE = """<span class="attachment"><a href={path}>{filename}</a></span>\n"""
 
 MAIN_TEMPLATE = """
