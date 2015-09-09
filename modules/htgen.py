@@ -22,7 +22,7 @@ THREADMESSAGE_404_TEMPLATE = """<li class="threadmessage" style="font-size:10px;
 MAIN_TEMPLATE = """
 <!doctype html>
 <head>
-    <title>ｔ {title}</title>
+    <title>tmail | {title}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/static/style.css" />
     <script src="/static/script.js"></script> 
