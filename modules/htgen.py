@@ -30,6 +30,10 @@ MAIN_TEMPLATE = """
 <body>
     <div class="topbar">
         <span class="logo">tmail</span>
+        <form action="">
+        <input type="search" name="search" class="search">
+        </form>
+        <a href="?refresh=true" class="refresh"><div>Refresh</div></a>
     </div>
     <div class="sidebar">
         <ol class="sidelinks">
@@ -163,7 +167,6 @@ def get_thread_message(msgid):
     msg_html = """
             <li class="threadmessage">
                 <div class="threadmessage">
-                    <div class="threadbutton">todo</div>
                     <table class="infobox">
                         <tr class="info "id="subject-{msgid}">
                             <td class="prefix">Subj:</td>
