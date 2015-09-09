@@ -2,6 +2,9 @@
 
 # Code related to generating dynamic HTML content
 
+# A note: HTML "id" attributes about message-specific elements
+# are suffixed with "-{msgid" where {msgid} is the message id.
+
 import os
 from html import escape as html_escape
 from html import unescape as html_unescape
@@ -162,36 +165,36 @@ def get_thread_message(msgid):
                 <div class="threadmessage">
                     <div class="threadbutton">todo</div>
                     <table class="infobox">
-                        <tr class="info "id="subject">
+                        <tr class="info "id="subject-{msgid}">
                             <td class="prefix">Subj:</td>
                             <td class="value" style="font-weight:bold;">{subj}</td>
                         </tr>
-                        <tr class="info "id="msgid">
+                        <tr class="info "id="msgid-{msgid}" style="display:none;">
                             <td class="prefix">ID:</td>
                             <td class="value">{msgid}</td>
                         </tr>
-                        <tr class="info "id="sender">
+                        <tr class="info "id="sender-{msgid}">
                             <td class="prefix">From:</td>
                             <td class="value">{sender}</td>
                         </tr>
-                        <tr class="info "id="recipient">
+                        <tr class="info "id="recipient-{msgid}">
                             <td class="prefix">To:</td>
                             <td class="value">{recip}</td>
                         </tr>
-                        <tr class="info "id="date">
+                        <tr class="info "id="date-{msgid}">
                             <td class="prefix">Date:</td>
                             <td class="value">{date}</td>
                         </tr>
-                        <tr class="info "id="cc">
+                        <tr class="info "id="cc-{msgid}" style="display:none;">
                             <td class="prefix">CC:</td>
                             <td class="value">{cc}</td>
                         </tr>
-                        <tr class="info "id="bcc">
+                        <tr class="info "id="bcc-{msgid}" style="display:none;">
                             <td class="prefix">BCC:</td>
                             <td class="value">{bcc}</td>
                         </tr>
                     </table>
-                    <div class="extended-toggle" onclick="toggleExtended">...</div>
+                    <div class="extended-toggle" onclick="toggleExtended('{msgid}');">Full details</div>
                     <div class="body">{body}</div>
                     <div class="attachments">{attachments}</div>
                 </div>
