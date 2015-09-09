@@ -23,6 +23,7 @@ Add sent messages to outbox
 Implement "thread" page
 Mark messages as read when their thread page is viewed
 password caching
+gnupg options
 
 ## MISC ##
 DB UNIQUE errors should make themselves known
