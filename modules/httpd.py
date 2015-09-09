@@ -13,6 +13,7 @@ from modules import htgen
 from modules import retrieve
 
 DEFAULT_PORT = 34989
+ROOT_REDIRECT = "/box/in"
 
 # Content-Types associated with extensions
 CTYPE_PATH = {
@@ -85,6 +86,10 @@ class RequestHandler(BaseHTTPRequestHandler):
                 retrieve.retrieve()
                 self.respond(302,[("Location",path)])
                 return
+        # Root redirect
+        if path == "":
+            self.respond(302,[("Location",ROOT_REDIRECT)])
+            return
         #################
         # File handling #
         #################

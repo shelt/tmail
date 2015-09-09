@@ -17,10 +17,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     database.connect()
+
     if not args.port:
         args.port = httpd.DEFAULT_PORT
-    httpd.run(port=args.port)
-    
-    sleep(3)
     if args.browser:
         webbrowser.open("http://127.0.0.1:" + args.port)
+
+    server = httpd.run(port=args.port)
