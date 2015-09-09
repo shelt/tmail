@@ -1,10 +1,26 @@
 #!/usr/bin/env python
 
-import webbrowser #todo
-#webbrowser.open("http://localhost:8998")
+import argparse
+import webbrowser
+from time import sleep
 
 from modules import httpd
 from modules import database
 
-database.connect()
-httpd.run()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    # Specify a port
+    parser.add_argument('-p', '--port', type=int)
+    # Open web browser after startup
+    parser.add_argument('-b', '--browser', action='store_true')
+    args = parser.parse_args()
+
+    database.connect()
+    if not args.port:
+        args.port = httpd.DEFAULT_PORT
+    httpd.run(port=args.port)
+    
+    sleep(3)
+    if args.browser:
+        webbrowser.open("http://127.0.0.1:" + args.port)

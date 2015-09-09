@@ -12,6 +12,8 @@ from http.cookies import SimpleCookie
 from modules import htgen
 from modules import retrieve
 
+DEFAULT_PORT = 34989
+
 # Content-Types associated with extensions
 CTYPE_PATH = {
 ".html"    :"text/html",
@@ -155,8 +157,8 @@ def is_file(path):
 def lacks_trailing_slash(path):
     return (("." not in path) and (not path.endswith("/")))
 
-def run(server_class=HTTPServer, server_handler=RequestHandler):
-    server_address = ("", 8000)
+def run(server_class=HTTPServer, server_handler=RequestHandler, port=DEFAULT_PORT):
+    server_address = ("", port)
     httpd = server_class(server_address, server_handler)
     try:
         httpd.serve_forever()
