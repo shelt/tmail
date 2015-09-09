@@ -15,9 +15,3 @@ I made this because I wanted a tolerable email client that ran off a USB stick a
 * Under development and not yet fully functional.
 
 * Biased towards plaintext. If you want to write HTML emails, this is not the tool for you. Minimal HTML parsing will be implemented so you can recieve email from bad mail clients.
-
-### Potential security concerns
-
-* Depending on your MTA (Mail transfer agent), your IP address can be included in your mail header.
-
-
