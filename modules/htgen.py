@@ -14,6 +14,8 @@ from modules import database
 ATTACHMENT_DIRECTORY = "attachments/"
 ATTACHMENT_TEMPLATE = """<span class="attachment"><a href={path}>{filename}</a></span>\n"""
 
+THREADMESSAGE_404_TEMPLATE = """<li class="threadmessage" style="font-size:10px;"><i>The above message is in reply to another message, but that message could not be located.</i><br>{msgid}</li>"""
+
 MAIN_TEMPLATE = """
 <!doctype html>
 <head>
@@ -120,7 +122,7 @@ def get_thread_content(rootid):
 def get_thread_message(msgid):
     msg = email.message_from_string(database.get_message(msgid, mark_read=True))
     if not msg:
-        return ('<li class="threadmessage">[Message not found]<br>'+msgid+'</li>',None)
+        return (THREADMESSAGE_404_TEMPLATE.format(msgid=escape(msgid)),None)
     subj      = escape(msg.get("Subject"))
     msgid     = escape(msg.get("Message-ID"))
     sender    = escape(msg.get("From"))
