@@ -39,8 +39,8 @@ MAIN_TEMPLATE = """
         <ol class="sidelinks">
             <li class="sidelink"><a id="sidelink-refresh" href="/compose">Compose</a></li>
             <li class="divider"></li>
-            <li class="sidelink"><a id="sidelink-inbox" href="http://localhost:8000/box/in">Inbox</a></li>
-            <li class="sidelink"><a id="sidelink-outbox" href="http://localhost:8000/box/out">Outbox</a></li>
+            <li class="sidelink"><a id="sidelink-inbox" href="/box/in">Inbox</a></li>
+            <li class="sidelink"><a id="sidelink-outbox" href="/box/out">Outbox</a></li>
         </ol>
     </div>
     <div class="contentarea">
