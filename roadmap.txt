@@ -24,6 +24,9 @@ Implement "thread" page
 Mark messages as read when their thread page is viewed
 password caching
 gnupg options
+better support for handling which email accounts show up where, so some can be used exclusively as a seperate inbox
+close socket GUI button
+account manager
 
 ## MISC ##
 DB UNIQUE errors should make themselves known
