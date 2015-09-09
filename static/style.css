@@ -314,3 +314,53 @@ span.inreplyto-header
     font-size: 10px;
     font-style:italic;
 }
+
+
+/* replymode fieldset */
+fieldset {
+    padding: 3px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+label {
+    cursor: pointer;
+    display: block;
+    float: left;
+    padding: .2em .4em;
+    background-color: #ccc;
+    border-style: solid;
+    border-width: 1px 1px 1px 0;
+    border-color: #666;
+    background-image: -moz-linear-gradient(rgba(255,255,255,.2), rgba(0,0,0,.2));
+    background-image: -webkit-linear-gradient(rgba(255,255,255,.2), rgba(0,0,0,.2));
+    background-image: linear-gradient(rgba(255,255,255,.2), rgba(0,0,0,.2));
+    box-shadow: 1px 1px 1px rgba(255,255,255,.2) inset, -1px -1px 1px rgba(0,0,0,.2) inset;
+}
+label:first-child {
+    border-left-width: 1px;
+    border-top-left-radius: .2em;
+    border-bottom-left-radius: .2em;
+}
+label:last-child {
+    border-top-right-radius: .2em;
+    border-bottom-right-radius: .2em;
+}
+label.selected {
+    background-color: #0066CC;
+    color: white;
+    border-color: darkblue;
+    background-image: -moz-linear-gradient(rgba(0,0,0,.2), rgba(255,255,255,.2));
+    background-image: -webkit-linear-gradient(rgba(0,0,0,.2), rgba(255,255,255,.2));
+    background-image: linear-gradient(rgba(0,0,0,.2), rgba(255,255,255,.2));
+    box-shadow: 1px 1px 1px rgba(0,0,0,.2) inset;
+}
+label.warning.selected {
+    background-color: red;
+    border-color: darkred;
+}
+input[type="radio"] {
+   position: absolute;
+   display:none;
+}
+/* end replymode fieldset */

@@ -33,7 +33,7 @@ linking to a non-root email should link to the root of that thread and then jump
 ##### Compose page #####
     reply radiobutton : Sender, Reply-all, List
     javascript to add new recips_normal and checking it doesn't exist already getelementbyid
-
+    highlight sender in list
 request read receipt
 gnupg options
 preview source

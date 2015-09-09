@@ -270,19 +270,42 @@ def get_compose_content(recips_normal, sender, inreplyto, replyall_enabled):
 
     recips_replyall,recips_normal = get_recip_lists(recips_normal, inreplyto, replyall_enabled)
     if recips_replyall is None:
-        recips_replyall = ""
+        # replyall is only None if the message couldn't be found.
+        raise ValueError("Cannot reply to nonexistant message!")
+    html += """
+        <fieldset class="replymode">
+            <div>
+                <label class="selected">
+                  Reply-to
+                  <input name="state" type="radio" value="reply" checked />
+                </label>
+                <label>
+                  Sender
+                  <input name="state" type="radio" value="replyall" />
+                </label>
+                <label class="warning">
+                  Reply-All
+                  <input name="state" type="radio" value="replyall" />
+                </label>
+            </div>
+        </fieldset>
+        """
+    html += recipts_replyall
+    html += recipts_normal
     
     # Add from input
     html += """
-<form action="?submit=true">
-    {recips_replyall}
-    {recips_normal}
-    <input class="recip-input" type="text" name="to" value="{recip}">
-    {accounts_dropdown}
+    <form action="?submit=true">
+        {recips_replyall}
+        {recips_normal}
+        <input class="recip-input" type="text" name="to" value="{recip}">
+        {accounts_dropdown}
 
-</form>
+    </form>
 
-""".format(accounts_dropdown=get_accounts_dropdown(sender=sender)
+    """.format(accounts_dropdown=get_accounts_dropdown(sender=sender))
+
+    return html
 
 # This function returns (recips_replyall,recips_normal).
 # If the inreplyto email is not specified or found,
@@ -296,7 +319,7 @@ def get_compose_content(recips_normal, sender, inreplyto, replyall_enabled):
 # set of reply targets (with duplicates and possibly the
 # replying user's address removed)."
 # https://www.ietf.org/proceedings/43/I-D/draft-ietf-drums-replyto-meaning-00.txt
-def get_recip_lists(recips_normal=[], inreplyto, replyall_enabled=False):
+def get_recip_lists(recips_normal=[], inreplyto=None, replyall_enabled=False):
     recips_replyall = set()
     recips_normal = set(recips_normal)
     if inreplyto is not None:
@@ -306,12 +329,12 @@ def get_recip_lists(recips_normal=[], inreplyto, replyall_enabled=False):
             # Convert ["sam shelton <sam@shelt.ca>"] to ["sam@shelt.ca"] for to, cc, and from fields
             cc = [email.utils.parseaddr(field) for field in inreplyto_msg.get("Cc").split(",")]
             to = [email.utils.parseaddr(field) for field in inreplyto_msg.get("To").split(",")]
-            fr = email.utils.parseaddr(inreplyto_msg.get("From")
+            fr = email.utils.parseaddr(inreplyto_msg.get("From"))
             # Merge lists
             recips_replyall = recips_replyall | set(cc) | set(to)
             recips_normal = recips_normal | set((fr,))
         else:
-            inreplyto = None
+            return (None,None)
 
     # Reply-all recip list
     if inreplyto is not None:
@@ -329,7 +352,11 @@ def get_recip_lists(recips_normal=[], inreplyto, replyall_enabled=False):
     # Normal recip list
     html_recips_normal = """<ol class="reciplist normal">\n"""
     for recip in recips_normal:
-        html_recips_normal += """<li id="{recip}">{recip}<div class="recip-remove" onclick="recipRemove('{recip}')">X</div></li>\n""".format(recip=escape(recip))
+        if recip == fr:
+            style = """color:blue;"""
+        else:
+            style = ""
+        html_recips_normal += """<li id="{recip}" {style}>"{recip}"<div class="recip-remove" onclick="recipRemove('{recip}')">X</div></li>\n""".format(recip=escape(recip), style=style)
     html_recips_normal += "</ol>\n"
 
     return (html_recips_replyall,html_recips_normal)
@@ -339,7 +366,7 @@ def get_recip_lists(recips_normal=[], inreplyto, replyall_enabled=False):
 
 ACCOUNTS_DROPDOWN_TEMPLATE = """<option {selected} value="{address}">{name} &lt;{address}&gt;</option>\n"""
 def get_accounts_dropdown(sender=""):
-    default_sender = database.get_setting("default_sender") todo NO NO NO SETTINGS SHOULD BE RETRIEVED ONE TIME AND STORED IN GLOBALS
+    default_sender = "sam@shelt.ca"#database.get_setting("default_sender") #todo NO NO NO SETTINGS SHOULD BE RETRIEVED ONE TIME AND STORED IN GLOBALS
 
     text = """<select class="sender">\n"""
     for account in database.get_account_list():
