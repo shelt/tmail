@@ -20,7 +20,7 @@ def disconnect():
 
 def init():
     connect()
-    cur.execute("CREATE TABLE IF NOT EXISTS Accounts (id INTEGER PRIMARY KEY, address TEXT UNIQUE,\
+    cur.execute("CREATE TABLE IF NOT EXISTS Accounts (id INTEGER PRIMARY KEY, address TEXT UNIQUE, name TEXT\
                                                       in_username TEXT, in_host TEXT, in_port INT,\
                                                       out_username TEXT, out_host TEXT, out_port INT)")
     cur.execute("CREATE TABLE IF NOT EXISTS Inbox (id TEXT UNIQUE, account INTEGER, data TEXT, date INT, read INT)")
@@ -32,8 +32,8 @@ def init():
 ##################
 
 # Account
-#(id INTEGER PRIMARY KEY, address TEXT UNIQUE, in_username TEXT, in_host TEXT, in_port INT,
-#                                              out_username TEXT, out_host TEXT, out_port INT)
+#(id INTEGER PRIMARY KEY, address TEXT UNIQUE, name TEXT, in_username TEXT, in_host TEXT, in_port INT,
+#                                                        out_username TEXT, out_host TEXT, out_port INT)
 
 def get_incoming_credentials(address=None):
     if address is None:
@@ -44,20 +44,23 @@ def get_incoming_credentials(address=None):
         return [cur.fetchone()]
 
 def get_outgoing_credentials(address):
-    cur.execute("SELECT id,out_username,out_host,out_port FROM Accounts WHERE address = ?", (address,))
+    cur.execute("SELECT id,name,out_username,out_host,out_port FROM Accounts WHERE address = ?", (address,))
     return cur.fetchone()
 
 def add_account(address, in_username, in_host, in_port,
                     out_username, out_host, out_port):
-    cur.execute("INSERT INTO Accounts (address,in_username,in_host,in_port,\
-                                       out_username,out_host,out_port) VALUES(?,?,?,?,?,?,?)", (address,
+    cur.execute("INSERT INTO Accounts (address,name,in_username,in_host,in_port,\
+                                       out_username,out_host,out_port) VALUES(?,?,?,?,?,?,?,?)",(address,
+                                                                                                name,
                                                                                                 in_username,
                                                                                                 in_host,
                                                                                                 in_port,
                                                                                                 out_username,
                                                                                                 out_host,
                                                                                                 out_port))
-
+def get_account_list():
+    cur.execute("SELECT address,name FROM Accounts")
+    return cur.fetchall()
 
 def delete_account(address):
     cur.execute("DELETE FROM Accounts WHERE address = ?" (address,))

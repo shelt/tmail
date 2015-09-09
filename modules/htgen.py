@@ -14,11 +14,6 @@ import mimetypes
 
 from modules import database
 
-ATTACHMENT_DIRECTORY = "attachments/"
-ATTACHMENT_TEMPLATE = """<span class="attachment"><a href={path}>{filename}</a></span>\n"""
-
-THREADMESSAGE_404_TEMPLATE = """<li class="threadmessage" style="font-size:10px;"><i>The above message is in reply to another message, but that message could not be located.</i><br>{msgid}</li>"""
-
 MAIN_TEMPLATE = """
 <!doctype html>
 <head>
@@ -48,6 +43,10 @@ MAIN_TEMPLATE = """
     </div>
 </body>
 """ 
+
+######################
+# INBOXES / OUTBOXES #
+######################
 
 def box(wfile, boxtype):
     wfile.write(MAIN_TEMPLATE.format(title=boxtype+"box", content=get_box_content(boxtype)).encode("UTF-8"))
@@ -108,8 +107,14 @@ def get_box_content(boxtype):
 
 
 
+###################
+# MESSAGE THREADS #
+###################
 
+THREADMESSAGE_404_TEMPLATE = """<li class="threadmessage" style="font-size:10px;"><i>The above message is in reply to another message, but that message could not be located.</i><br>{msgid}</li>"""
 
+ATTACHMENT_DIRECTORY = "attachments/"
+ATTACHMENT_TEMPLATE = """<span class="attachment"><a href={path}>{filename}</a></span>\n"""
 
 def thread(wfile, rootid):
     wfile.write(MAIN_TEMPLATE.format(title="thread", content=get_thread_content(rootid)).encode("UTF-8"))
@@ -241,6 +246,118 @@ def get_message_body(msg):
         plain = "Message has no text/plain part. TODO: implement HTML-To-Plain parsing."
     return (plain,attachments)
 
+
+
+
+#################
+#    COMPOSE    #
+#################
+
+INREPLYTO_HEADER_TEMPLATE = """Replying to <a href="{inreplyto}">{inreplyto}</a>"""
+
+def compose(wfile, recips=[], sender="", inreplyto=None, replyall=False):
+    wfile.write(MAIN_TEMPLATE.format(title="Compose", content=get_compose_content(recips,sender,inreplyto, replyall)).encode("UTF-8"))
+    
+# recips_normal:    recipients optionally specified by GET params
+# sender:    send address optionally specified by GET params
+# inreplyto: inreplyto id optionally specified by GET params
+# replyall:  replyall boolean specified by GET parameters
+def get_compose_content(recips_normal, sender, inreplyto, replyall_enabled):
+    html = ""
+    if inreplyto:
+        # Add reply header
+        html += INREPLYTO_HEADER_TEMPLATE.format(inreplyto=inreplyto)
+
+    recips_replyall,recips_normal = get_recip_lists(recips_normal, inreplyto, replyall_enabled)
+    if recips_replyall is None:
+        recips_replyall = ""
+    
+    # Add from input
+    html += """
+<form action="?submit=true">
+    {recips_replyall}
+    {recips_normal}
+    <input class="recip-input" type="text" name="to" value="{recip}">
+    {accounts_dropdown}
+
+</form>
+
+""".format(accounts_dropdown=get_accounts_dropdown(sender=sender)
+
+# This function returns (recips_replyall,recips_normal).
+# If the inreplyto email is not specified or found,
+# no recips_replyall list is generated. If it is found,
+# it will be generated according to the quote below.
+# Even if replyall_enabled is false, it's still generated
+# but not shown.
+
+# The replyall recip list is constructed "using the contents
+# of the original From, To and CC header as the default
+# set of reply targets (with duplicates and possibly the
+# replying user's address removed)."
+# https://www.ietf.org/proceedings/43/I-D/draft-ietf-drums-replyto-meaning-00.txt
+def get_recip_lists(recips_normal=[], inreplyto, replyall_enabled=False):
+    recips_replyall = set()
+    recips_normal = set(recips_normal)
+    if inreplyto is not None:
+        # Retrieve replyall addresses
+        inreplyto_msg = email.message_from_string(database.get_message(inreplyto))
+        if inreplyto_msg:
+            # Convert ["sam shelton <sam@shelt.ca>"] to ["sam@shelt.ca"] for to, cc, and from fields
+            cc = [email.utils.parseaddr(field) for field in inreplyto_msg.get("Cc").split(",")]
+            to = [email.utils.parseaddr(field) for field in inreplyto_msg.get("To").split(",")]
+            fr = email.utils.parseaddr(inreplyto_msg.get("From")
+            # Merge lists
+            recips_replyall = recips_replyall | set(cc) | set(to)
+            recips_normal = recips_normal | set((fr,))
+        else:
+            inreplyto = None
+
+    # Reply-all recip list
+    if inreplyto is not None:
+        if replyall_enabled:
+            style = ""
+        else:
+            style = "none;"
+        html_recips_replyall = """<ol class="reciplist replyall" style="{style}">\n""".format(style=style)
+        for recip in recips_replyall:
+            html_recips_replyall += """<li id="{recip}">{recip}<div class="recip-remove" onclick="recipRemove('{recip}')">X</div></li>\n""".format(recip=escape(recip))
+        html_recips_replyall += "</ol>\n"
+    else:
+        html_recips_replyall = None
+
+    # Normal recip list
+    html_recips_normal = """<ol class="reciplist normal">\n"""
+    for recip in recips_normal:
+        html_recips_normal += """<li id="{recip}">{recip}<div class="recip-remove" onclick="recipRemove('{recip}')">X</div></li>\n""".format(recip=escape(recip))
+    html_recips_normal += "</ol>\n"
+
+    return (html_recips_replyall,html_recips_normal)
+
+
+
+
+ACCOUNTS_DROPDOWN_TEMPLATE = """<option {selected} value="{address}">{name} &lt;{address}&gt;</option>\n"""
+def get_accounts_dropdown(sender=""):
+    default_sender = database.get_setting("default_sender") todo NO NO NO SETTINGS SHOULD BE RETRIEVED ONE TIME AND STORED IN GLOBALS
+
+    text = """<select class="sender">\n"""
+    for account in database.get_account_list():
+        if sender == "":
+            if account[0] == default_sender:
+                selected = "selected"
+            else:
+                selected = ""
+        else:
+            selected = sender
+        text += ACCOUNTS_DROPDOWN_TEMPLATE.format(selected=selected, address=account[0], name=account[1])
+    text += "</select>\n"
+    return text
+
+
+#################
+# MISCELLANEOUS #
+#################
 
 # Fix html module functions to handle None inputs
 def escape(string):

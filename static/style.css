@@ -278,6 +278,10 @@ li.threadmessage div.body
     white-space: pre-wrap;
     margin-top: 15px;
 }
+tr.info > td.value
+{
+    line-height: 14px;
+}
 
 div.attachments
 {
@@ -298,4 +302,15 @@ div.quote
 input[type=checkbox].showquote:checked + div.quote
 {
     display:block;
+}
+
+
+
+
+
+/* COMPOSE CONTENT */
+span.inreplyto-header
+{
+    font-size: 10px;
+    font-style:italic;
 }
