@@ -89,8 +89,10 @@ def get_box_content(boxtype):
                 <li class="boxmessage">
                     <a href="/thread/{msgid}">
                         <div class="info whobox">
-                            <div class="sender">{sender}</div>
-                            <div class="recipient">{recip}</div>
+                            <table>
+                            <tr><td style="color:#AAA;">F:</td><td>{sender}</td></tr>
+                            <tr><td style="color:#AAA;">T:</td><td>{recip}</td></tr>
+                            </table>
                         </div>
                         <div class ="info whatwhenbox">    
                             <div class="subject" style="font-weight: {weight};">{subj}</div>

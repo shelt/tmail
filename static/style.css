@@ -1,13 +1,26 @@
 @font-face {
-    font-family: bitstream;
-    src: url("fonts/Bitstream-Vera-Sans-Mono-Roman.ttf");
+    font-family: liberation-sans;
+    src: url("fonts/LiberationSans-Regular.ttf");
 }
+
+@font-face {
+    font-family: liberation-sans;
+    src: url("fonts/LiberationSans-Bold.ttf");
+    font-weight: bold;
+} 
+@font-face {
+    font-family: liberation-sans;
+    src: url("fonts/LiberationSans-Italic.ttf");
+    font-style: italic;
+} 
+
+
 
 body
 {
     font-size: 14px;
     font-weight: 400;
-    font-family: bitstream, monospace;
+    font-family: liberation-sans, monospace;
     line-height: 24px;
     color: #666;
     margin:0;
@@ -29,7 +42,6 @@ div.topbar
 }
 span.logo
 {
-    font-family: Avantgarde, bitstream, sans-serif;
     font-weight: bold;
     color:#3366CC;
     position:absolute;
@@ -175,14 +187,12 @@ div.info
 
 div.info.whobox
 {
+    padding-top:0.3%; /* Different from div.info (parent) */
     float:left;
-    padding-top:0.6%;
     margin-left:1%; /* contributes to div.info.subject margin-left */
     max-width: 35%; /* contributes to div.info.subject margin-left */
 
 }
-div.whobox > div.sender:before    {color:#AAA;content:"F: ";}
-div.whobox > div.recipient:before {color:#AAA;content:"T: ";}
 
 div.info.whatwhenbox
 {
@@ -266,6 +276,7 @@ div.extended-toggle
 li.threadmessage div.body
 {
     white-space: pre-wrap;
+    margin-top: 15px;
 }
 
 div.attachments
