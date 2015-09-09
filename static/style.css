@@ -235,3 +235,13 @@ div.attachments > span.attachment
     padding-left:5px;
     padding-right:5px;
 }
+
+/* Quote hiding */
+div.quote
+{
+    display:none;
+}
+input[type=checkbox].showquote:checked + div.quote
+{
+    display:block;
+}

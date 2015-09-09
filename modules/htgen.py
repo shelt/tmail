@@ -131,7 +131,29 @@ def get_thread_message(msgid):
     inreplyto = escape(msg.get("In-Reply-To"))
 
     (body,attachments) = get_message_body(msg)
+    
     body = escape(body)
+    # Hide quoted text
+    # Text should be quoted if it starts with a "> ", or
+    # if the line above or below it does (because some mail
+    # clients are bad at word wrapping)
+    lines = body.splitlines()
+    i = 0
+    already_quoting = False
+    last_quoted_line = None
+    for i in range(len(lines)):
+        if lines[i].startswith("&gt; "):
+            last_quoted_line = i
+            if not already_quoting:
+                lines[i] = '\n<input type="checkbox" class="showquote"><div class="quote">\n' + lines[i]
+                already_quoting = True
+            elif (i - last_quoted_line) > 1:
+                lines[i] = lines[i] + '\n</div"><\n'
+                already_quoting = False
+    body = "\n".join(lines)
+        
+    
+
 
     msg_html = """
             <li class="threadmessage">
