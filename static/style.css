@@ -209,8 +209,8 @@ ol.threadmessages
 {
     text-size:8px;
     overflow-y: scroll;
-    height:90%;
-    width:90%;
+    height:100%;
+    width:100%;
     margin:0;
     padding:0;
 }
