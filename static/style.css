@@ -309,10 +309,11 @@ input[type=checkbox].showquote:checked + div.quote
 
 
 /* COMPOSE CONTENT */
-span.inreplyto-header
+span.reply-header
 {
     font-size: 10px;
     font-style:italic;
+    margin-left: 1%;
 }
 
 
@@ -322,6 +323,7 @@ fieldset.replymode {
     border: none;
     padding: 0;
     margin: 0;
+    margin-left: 1%;
 }
 fieldset.replymode > div > label {
     cursor: pointer;
@@ -364,3 +366,22 @@ fieldset.replymode > div > label > input[type="radio"] {
    display:none;
 }
 /* end replymode fieldset */
+
+ol.recips
+{
+    padding:0;
+    margin:0;
+    margin-left: 1%;
+}
+ol.recips > li
+{
+    list-style-type:none;
+}
+
+
+select.sender
+{
+    padding:0;
+    margin:0;
+    margin-left:1%;
+}

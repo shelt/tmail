@@ -49,15 +49,31 @@ setToList = function(list) {
     }
 }
 
+// This function can be called with no parameters to
+// Disable
 function radioChange(elem) {
-    var labels = elem.parentElement.parentElement.children;
-    for (var i=0; i<labels.length; i++)
-        if (labels[i].getAttribute("class") === "selected")
-            labels[i].setAttribute("class","");
-    elem.parentNode.setAttribute("class","selected");
+    if (typeof elem === "undefined") {
+        var labels = document.getElementById("replymode-fieldset").children[0].children;
+        for (var i=0; i<labels.length; i++)
+            if (labels[i].getAttribute("class") === "selected")
+                labels[i].setAttribute("class","");
+    }
+    else {
+        var labels = elem.parentElement.parentElement.children;
+        for (var i=0; i<labels.length; i++)
+            if (labels[i].getAttribute("class") === "selected")
+                labels[i].setAttribute("class","");
+            elem.parentNode.setAttribute("class","selected");
+    }
 }
 
-
+function addRecip(elem) {
+    // keypress TODO
+    var li = document.createElement("li");
+    var text = document.createTextNode(elem.value);
+    li.appendChild(text);
+    document.getElementById("recips").appendChild(li);
+}
 
 
 

@@ -253,7 +253,7 @@ def get_message_body(msg):
 #    COMPOSE    #
 #################
 
-INREPLYTO_HEADER_TEMPLATE = """Replying to <a href="{inreplyto}">{inreplyto}</a>"""
+INREPLYTO_HEADER_TEMPLATE = """<span class="reply-header">Replying to <a href="{inreplyto}">{inreplyto}</a></span>"""
 
 def compose(wfile, recips=[], sender="", inreplyto=None, replyall=False):
     wfile.write(MAIN_TEMPLATE.format(title="Compose", content=get_compose_content(recips,sender,inreplyto, replyall)).encode("UTF-8"))
@@ -290,7 +290,7 @@ var recip_sender = {recip_sender};
 """.format(recips_replyall=list(recips_replyall), recips_replyto=list(recips_replyto), recip_sender=recip_sender)
 
         html += """
-            <fieldset class="replymode">
+            <fieldset id="replymode-fieldset" class="replymode">
                 <div>
                     <label class="selected">
                       Reply-to
@@ -309,8 +309,9 @@ var recip_sender = {recip_sender};
         """
     # note the end of above if block
     html += """
-    <li id="recips" class="recips">
-    </li>
+    <ol id="recips" class="recips">
+    </ol>
+    <input type="text" name="addrecip" class="addrecip" onkeypress="addRecip(this);">
     {from_account}
     """.format(from_account=get_accounts_dropdown())
     return html
