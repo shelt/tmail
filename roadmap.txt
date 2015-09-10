@@ -6,76 +6,58 @@ httpd:    code related to serving meaningful data to users via webserver
 database: code related to storing and retrieving data from the database. SQL queries should only be executed here.
 
 
-
 ##### TODO #####
-mark-all-as-read button
-two equal-sized buttons on the right side of every entry in the box lists:mark as read, delete (with confirmation alert)
-add style to show-quoted checkbox
-Linkify hyperlinks in the body
-! do CSS for thread pages:
-    Move todo button to bottom and make it reply; add more buttons
-make "Compose" indented when it's selected (through javascript)
-thread view: only show one message per thread while still showing unread status and last time
-refresh button on box page
-Format time into: sept 05 20:09 (5m ago)
-compose page and post request
-Add sent messages to outbox
-Implement "thread" page
-Mark messages as read when their thread page is viewed
-password caching
-gnupg options
-better support for handling which email accounts show up where, so some can be used exclusively as a seperate inbox
-close socket GUI button
-account manager
 
+### GENERAL
+mark-all-as-read button
+Format times into: sept 05 20:09 (5m ago)
+password caching
+close socket GUI button
+account manager and settings page
+settings DB table and load them into memory every startup
+
+
+### BOXES
+two equal-sized buttons on the right side of every entry in the box lists:mark read, delete (with confirmation alert) (AJAX)
+thread view option: only show one message per thread while still showing unread status and last time
+better support for handling which email accounts show up where, so some can be used exclusively as a separate inbox,
+CONT: and some can be hidden from the main inbox.
+
+
+### THREAD
+add style to the show-quoted check-box
+Linkify hyper-links in the body
+Improve CSS for thread pages
+Add reply button, reply all, other buttons to threads
 linking to a non-root email should link to the root of that thread and then jump to and highlight that nonroot email!
 
-##### Compose page #####
-    reply radiobutton : Sender, Reply-all, List
-    javascript to add new recips_normal and checking it doesn't exist already getelementbyid
-    highlight sender in list
-request read receipt
+
+### COMPOSE
+Styling
+highlight reply sender in To: list
+request read receipt option
 gnupg options
-preview source
-attach (dragndrop as well)
-quote thread
-
-##
-? <i>Replying to <a href></i>
-? reply-replyall radiobuttons
-to text
-from dropdown
+preview source option (new tab)
+attach (drag drop as well)
+quote thread option
+cc bcc
+submitting (post)
+Add sent messages to outbox
 
 
-##
 
-## MISC ##
-DB UNIQUE errors should make themselves known
-set max sizes of UI elements to prevent distortion - hide some elements (bars) when DOM becomes too small
-cache pass once entered for use with subsequent refreshes
+
+
+### MISC
+DB UNIQUE errors should make themselves known to the user
+set max sizes of UI elements to prevent distortion; hide some elements (bars) when DOM becomes too small
 password input from browser / better password handling (no getpass)
 html-to-plaintext messages for those with no plain counterpart
-send confirmation dialog
+send confirmation dialogue
 spam header detection
-cc bcc
-add sent mail to Outbox table
 
 
-##### NOTES #####
-.decode() before displaying?
-will nonstandard headers like thread-index be neccesary to parse in order to represent threads?
-
-
-#### web ####
-PAGES
-THREADS: all messages which have not been replied to by another message.
-INBOX: all in messages listed by order of date
-OUTBOX: all out messages listed by order of date
-Selecting a message will show a thread. If the message is a reply to another message,
-that message will appear below it. If the message has been replied to by another message,
-that message, links to that message will appear.
-If the message has been replied to (i.e. it is the in-reply-to field of some other message(s)),
-links to those messages will show above the main message in bar type links.
-
-##### Dynamic elements #####
+##### UNSOLVED PROBLEMS #####
+Will non-standard headers like thread-index be necessary to parse in order to represent threads?
+Why do pages occasionally take longer to load? Note that the delay is before do_GET is even called.
 
