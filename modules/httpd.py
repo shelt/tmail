@@ -133,7 +133,15 @@ class RequestHandler(BaseHTTPRequestHandler):
         elif path.startswith("/thread/"):
             self.respond(200,[("Content-type","text/html")])
             htgen.thread(self.wfile, parse.unquote(path[8:])) # 8 is the length of "/thread/"
+
+        elif path == "/compose":
+            self.respond(200,[("Content-type","text/html")])
+            # Todo params parsing
+            htgen.compose(self.wfile, recips=[], sender="", inreplyto="<1557752776.152901.1441738798174.JavaMail.open-xchange@app4.ox.privateemail.com>", replyall=False)
         
+        else:
+            self.respond(404,[("Content-type","text/html")])
+            self.wfile.write("<h1>404 Not Found</h1>".encode("UTF-8"))
     def respond(self,code,headers=[],cache=False): # list of tuples
         self.send_response(code)
         for header in headers:

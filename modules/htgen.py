@@ -269,41 +269,40 @@ def get_compose_content(recips_normal, sender, inreplyto, replyall_enabled):
         html += INREPLYTO_HEADER_TEMPLATE.format(inreplyto=inreplyto)
 
     recips_replyall,recips_normal = get_recip_lists(recips_normal, inreplyto, replyall_enabled)
-    if recips_replyall is None:
+    if recips_replyall is not None:
         # replyall is only None if the message couldn't be found.
-        raise ValueError("Cannot reply to nonexistant message!")
-    html += """
-        <fieldset class="replymode">
-            <div>
-                <label class="selected">
-                  Reply-to
-                  <input name="state" type="radio" value="reply" checked />
-                </label>
-                <label>
-                  Sender
-                  <input name="state" type="radio" value="replyall" />
-                </label>
-                <label class="warning">
-                  Reply-All
-                  <input name="state" type="radio" value="replyall" />
-                </label>
-            </div>
-        </fieldset>
-        """
-    html += recipts_replyall
-    html += recipts_normal
+        html += """
+            <fieldset class="replymode">
+                <div>
+                    <label class="selected">
+                      Reply-to
+                      <input name="state" type="radio" value="reply" checked />
+                    </label>
+                    <label>
+                      Sender
+                      <input name="state" type="radio" value="replyall" />
+                    </label>
+                    <label class="warning">
+                      Reply-All
+                      <input name="state" type="radio" value="replyall" />
+                    </label>
+                </div>
+            </fieldset>
+            """
+    else:
+        recips_replyall = ""
     
     # Add from input
     html += """
     <form action="?submit=true">
         {recips_replyall}
         {recips_normal}
-        <input class="recip-input" type="text" name="to" value="{recip}">
+        <input class="recip-input" type="text" name="to">
         {accounts_dropdown}
 
     </form>
 
-    """.format(accounts_dropdown=get_accounts_dropdown(sender=sender))
+    """.format(recips_replyall=recips_replyall, recips_normal=recips_normal, accounts_dropdown=get_accounts_dropdown(sender=sender))
 
     return html
 
@@ -327,21 +326,19 @@ def get_recip_lists(recips_normal=[], inreplyto=None, replyall_enabled=False):
         inreplyto_msg = email.message_from_string(database.get_message(inreplyto))
         if inreplyto_msg:
             # Convert ["sam shelton <sam@shelt.ca>"] to ["sam@shelt.ca"] for to, cc, and from fields
-            cc = [email.utils.parseaddr(field) for field in inreplyto_msg.get("Cc").split(",")]
-            to = [email.utils.parseaddr(field) for field in inreplyto_msg.get("To").split(",")]
-            fr = email.utils.parseaddr(inreplyto_msg.get("From"))
+            cc = [email.utils.parseaddr(field)[1] for field in inreplyto_msg.get("Cc").split(",")]
+            to = [email.utils.parseaddr(field)[1] for field in inreplyto_msg.get("To").split(",")]
+            fr = email.utils.parseaddr(inreplyto_msg.get("From"))[1]
             # Merge lists
             recips_replyall = recips_replyall | set(cc) | set(to)
             recips_normal = recips_normal | set((fr,))
-        else:
-            return (None,None)
 
     # Reply-all recip list
     if inreplyto is not None:
         if replyall_enabled:
             style = ""
         else:
-            style = "none;"
+            style = "display:none;"
         html_recips_replyall = """<ol class="reciplist replyall" style="{style}">\n""".format(style=style)
         for recip in recips_replyall:
             html_recips_replyall += """<li id="{recip}">{recip}<div class="recip-remove" onclick="recipRemove('{recip}')">X</div></li>\n""".format(recip=escape(recip))

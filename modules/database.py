@@ -20,7 +20,7 @@ def disconnect():
 
 def init():
     connect()
-    cur.execute("CREATE TABLE IF NOT EXISTS Accounts (id INTEGER PRIMARY KEY, address TEXT UNIQUE, name TEXT\
+    cur.execute("CREATE TABLE IF NOT EXISTS Accounts (id INTEGER PRIMARY KEY, address TEXT UNIQUE, name TEXT,\
                                                       in_username TEXT, in_host TEXT, in_port INT,\
                                                       out_username TEXT, out_host TEXT, out_port INT)")
     cur.execute("CREATE TABLE IF NOT EXISTS Inbox (id TEXT UNIQUE, account INTEGER, data TEXT, date INT, read INT)")
@@ -47,7 +47,7 @@ def get_outgoing_credentials(address):
     cur.execute("SELECT id,name,out_username,out_host,out_port FROM Accounts WHERE address = ?", (address,))
     return cur.fetchone()
 
-def add_account(address, in_username, in_host, in_port,
+def add_account(address, name, in_username, in_host, in_port,
                     out_username, out_host, out_port):
     cur.execute("INSERT INTO Accounts (address,name,in_username,in_host,in_port,\
                                        out_username,out_host,out_port) VALUES(?,?,?,?,?,?,?,?)",(address,
