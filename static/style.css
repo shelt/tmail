@@ -84,7 +84,7 @@ a.refresh > div:hover { background-color: #DDD; }
 div.sidebar
 {
     width:10%;
-    height:90%;
+    height: calc(100% - 50px);
     top:50px;
     left:0;
     position:fixed;
@@ -139,8 +139,8 @@ li.sidelink > a
 
 div.contentarea
 {
-    width:100%;
-    height:100%;
+    width: calc(100% - 10.1%);
+    height: calc(100% - 50px);
     position:fixed;
     top:50px;
     left:10.1%;
@@ -149,8 +149,8 @@ div.contentarea
 /***** IN/OUTBOX CONTENT  *****/
 ol.boxmessages
 {
-    width:90%;
-    height:90%;
+    width:100%;
+    height:100%;
     overflow-y: scroll;
     padding: 0;
     margin: 0;
