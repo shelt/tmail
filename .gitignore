@@ -1,4 +1,5 @@
 *~
+*.swp
 
 # Python compiled
 *.pyc
