@@ -317,13 +317,13 @@ span.inreplyto-header
 
 
 /* replymode fieldset */
-fieldset {
+fieldset.replymode {
     padding: 3px;
     border: none;
     padding: 0;
     margin: 0;
 }
-label {
+fieldset.replymode > div > label {
     cursor: pointer;
     display: block;
     float: left;
@@ -337,16 +337,16 @@ label {
     background-image: linear-gradient(rgba(255,255,255,.2), rgba(0,0,0,.2));
     box-shadow: 1px 1px 1px rgba(255,255,255,.2) inset, -1px -1px 1px rgba(0,0,0,.2) inset;
 }
-label:first-child {
+fieldset.replymode > div > label:first-child {
     border-left-width: 1px;
     border-top-left-radius: .2em;
     border-bottom-left-radius: .2em;
 }
-label:last-child {
+fieldset.replymode > div > label:last-child {
     border-top-right-radius: .2em;
     border-bottom-right-radius: .2em;
 }
-label.selected {
+fieldset.replymode > div > label.selected {
     background-color: #0066CC;
     color: white;
     border-color: darkblue;
@@ -355,11 +355,11 @@ label.selected {
     background-image: linear-gradient(rgba(0,0,0,.2), rgba(255,255,255,.2));
     box-shadow: 1px 1px 1px rgba(0,0,0,.2) inset;
 }
-label.warning.selected {
+fieldset.replymode > div > label.warning.selected {
     background-color: red;
     border-color: darkred;
 }
-input[type="radio"] {
+fieldset.replymode > div > label > input[type="radio"] {
    position: absolute;
    display:none;
 }
