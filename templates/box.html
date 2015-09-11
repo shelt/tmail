@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ boxtype }}box{% endblock %}
+
+{% block content %}
+<ol class="boxmessages">
+{% for msg in msgs %}
+    <li class="boxmessage">
+        <a href="/thread?msgid={{msg.msgid}}">
+            <div class="info whobox">
+                <table>
+                <tr><td style="color:#AAA;">F:</td><td>{{msg.sender}}</td></tr>
+                <tr><td style="color:#AAA;">T:</td><td>{{msg.recip}}</td></tr>
+                </table>
+            </div>
+            <div class ="info whatwhenbox">    
+                <div class="subject" style="font-weight: {% if msg.read %}'normal'{% else %}'bold'{% endif %};">{{msg.subj}}</div>
+                <div class="date">{{msg.date}}</div>
+            </div>
+        </a>
+    </li>
+{% endfor %}
+</ol>
+{% endblock %}

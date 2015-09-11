@@ -1,0 +1,49 @@
+
+
+
+
+
+{% extends "base.html" %}
+{% block title %}Compose{% endblock %}
+
+{% block content %}
+{% if inreplyto_msg %}
+    <span class="reply-header">Replying to <a href="{{inreplyto}}">{{inreplyto}}</a></span>
+    <fieldset id="replymode-fieldset" class="replymode">
+        <div>
+            <label class="selected">
+              Reply-to
+              <input name="replymode" onclick="radioChange(this);setToList(recips_replyto);" type="radio" value="reply_to" />
+            </label>
+            <label>
+              Sender
+              <input name="replymode" onclick="radioChange(this);setToList(recip_sender);" type="radio" value="sender" />
+            </label>
+            <label>
+              Reply-All
+              <input name="replymode" onclick="radioChange(this);setToList(recips_replyall);" type="radio" value="reply_all" />
+            </label>
+        </div>
+    </fieldset>
+    <script>
+        var recips_replyall = {{recips_replyall}};
+        var recips_replyto = {{recips_replyto}};
+        var recip_sender = {{recip_sender}};
+        //if ({replyall_enabled})
+    </script>
+{% endif %}
+    <ol id="recips" class="recips">
+    </ol>
+    <input id="addrecip" type="text" name="addrecip" class="addrecip">
+    <script>
+    document.getElementById("addrecip").onkeypress = function(event) {
+    if (event.which == 13 || event.keyCode == 13)
+        addRecip(this.value);
+    </script>
+    
+    <select class="sender">
+    {% for account in accounts %}
+        <option {% if account.default %}selected{% endif %} value="{{account.address}}">{{account.name}} &lt;{{account.address}}&gt;</option>
+    {% endfor %}
+    "</select>
+{% endblock %}"

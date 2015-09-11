@@ -5,6 +5,10 @@ parse:    code related to extracting meaningful data from raw email data
 httpd:    code related to serving meaningful data to users via webserver
 database: code related to storing and retrieving data from the database. SQL queries should only be executed here.
 
+##### NOTES #####
+To prevent confusion:
+    urllib.parse.quote(): escapes URL characters
+    html.escape(): escapes HTML characters
 
 ##### TODO #####
 
@@ -15,13 +19,16 @@ password caching
 close socket GUI button
 account manager and settings page
 settings DB table and load them into memory every startup
+the sidebar highlighting for current pages can now be moved from javascript to server-side with janja
 
 
 ### BOXES
 two equal-sized buttons on the right side of every entry in the box lists:mark read, delete (with confirmation alert) (AJAX)
-thread view option: only show one message per thread while still showing unread status and last time
 better support for handling which email accounts show up where, so some can be used exclusively as a separate inbox,
 CONT: and some can be hidden from the main inbox.
+
+! only show root messages, i.e. messages that don't have any replies presently in the inbox.
+! bold threads containing ANY unread messages, not just unread roots.
 
 
 ### THREAD
@@ -30,6 +37,8 @@ Linkify hyper-links in the body
 Improve CSS for thread pages
 Add reply button, reply all, other buttons to threads
 linking to a non-root email should link to the root of that thread and then jump to and highlight that nonroot email!
+
+! highlight unread messages
 
 
 ### COMPOSE
@@ -43,6 +52,7 @@ quote thread option
 cc bcc
 submitting (post)
 Add sent messages to outbox
+Default sender, and extract the sender from the "To" field of the in-reply-to message.
 
 
 

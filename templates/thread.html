@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Thread{% endblock %}
+
+{% block content %}
+<ol class="threadmessages">
+{% for msg in msgs %}
+    {% if msg != None %}
+        <li class="threadmessage">
+            <div class="threadmessage">
+                <table class="infobox">
+                    <tr class="info "id="subject-{{msg.msgid}}">
+                        <td class="prefix">Subj:</td>
+                        <td class="value" style="font-weight:bold;">{{msg.subj}}</td>
+                    </tr>
+                    <tr class="info "id="msgid-{{msg.msgid}}" style="display:none;">
+                        <td class="prefix">ID:</td>
+                        <td class="value">{{msg.msgid}}</td>
+                    </tr>
+                    <tr class="info "id="sender-{{msg.msgid}}">
+                        <td class="prefix">From:</td>
+                        <td class="value">{{msg.sender}}</td>
+                    </tr>
+                    <tr class="info "id="recipient-{{msg.msgid}}">
+                        <td class="prefix">To:</td>
+                        <td class="value">{{msg.recip}}</td>
+                    </tr>
+                    <tr class="info "id="date-{{msg.msgid}}">
+                        <td class="prefix">Date:</td>
+                        <td class="value">{{msg.date}}</td>
+                    </tr>
+                    <tr class="info "id="cc-{{msg.msgid}}" style="display:none;">
+                        <td class="prefix">CC:</td>
+                        <td class="value">{{msg.cc}}</td>
+                    </tr>
+                    <tr class="info "id="bcc-{{msg.msgid}}" style="display:none;">
+                        <td class="prefix">BCC:</td>
+                        <td class="value">{{msg.bcc}}</td>
+                    </tr>
+                </table>
+                <div class="extended-toggle" onclick="toggleExtended('{{msg.msgid}}');">Full details</div>
+                <div class="body">{{msg.body}}</div>
+                <ul class="attachments">
+                {% for attachment in msg.attachments %}
+                    <li class="attachment"><a href="{{attachment.path}}">{{attachment.filename}}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+        </li>
+    {% else %}
+        <li class="threadmessage" style="font-size:10px;">
+            <i>Message could not be located.</i>
+        </li>
+    {% endif %}
+{% endfor %}
+</ol>
+{% endblock %}

@@ -81,7 +81,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         params = parse.parse_qs(_request.query)
         fullpath = _request.path.strip("/")
         path = fullpath.split("/")
-
         if params:
             if "refresh" in params:
                 retrieve.retrieve()
@@ -136,15 +135,23 @@ class RequestHandler(BaseHTTPRequestHandler):
         # Thread handling #
         ###################
         elif path[0] == "thread":
+            if "msgid" not in params: # Error
+                self.respond(302,[("Location",ROOT_REDIRECT)])
+                return
             self.respond(200,[("Content-type","text/html")])
-            htgen.thread(self.wfile, parse.unquote(path[1]))
+            htgen.thread(self.wfile, params["msgid"][0])
         elif path[0] == "raw":
-            self.respond(200,[("Content-type","text/plain")])
+            self.respond(200,[("Content-type","text/plain")])#TODO should be like above
             wfile.write(database.get_message(msgid))
         elif path[0] == "compose":
             self.respond(200,[("Content-type","text/html")])
-            # Todo params parsing
-            htgen.compose(self.wfile, recips=[], sender="", inreplyto="<1557752776.152901.1441738798174.JavaMail.open-xchange@app4.ox.privateemail.com>", replyall=False)
+            args = {}
+            # Cleaning
+            if "inreplyto" in params:
+                args["inreplyto"] = params["inreplyto"][0]
+            if "replyall" in params:
+                args["replyall"] = True
+            htgen.compose(self.wfile, **args)
         
         else:
             self.respond(404,[("Content-type","text/html")])

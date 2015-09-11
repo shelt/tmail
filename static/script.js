@@ -23,6 +23,8 @@ function refresh() {
     document.refresh.submit();
 }
 
+// THREAD //
+
 var HIDDEN = ["msgid","cc","bcc"];
 function toggleExtended(msgid) {
     for (var i = 0; i < HIDDEN.length; i++) {
@@ -33,7 +35,7 @@ function toggleExtended(msgid) {
 
 
 
-
+// COMPOSE //
 
 
 // To List
@@ -67,19 +69,10 @@ function radioChange(elem) {
     }
 }
 
-function addRecip(elem) {
+function addRecip(value) {
     // keypress TODO
     var li = document.createElement("li");
-    var text = document.createTextNode(elem.value);
+    var text = document.createTextNode(value);
     li.appendChild(text);
     document.getElementById("recips").appendChild(li);
-}
-
-
-
-
-
-function addCustomRecipient() {
-    if (arrValues.indexOf('Sam') > -1)
-        alert("todo");
 }

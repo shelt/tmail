@@ -11,32 +11,47 @@ from html import unescape as html_unescape
 import urllib
 import email
 import mimetypes
-from jinja2 import Environment
-from jinja2.loaders import FileSystemLoader
 
 from modules import database
 
-TEMPLATE_DIR = "templates"
-# Load templates
-loader = FileSystemLoader(TEMPLATE_DIR)
-env = Environment(line_statement_prefix='%',
-      variable_start_string="{{",
-      variable_end_string="}}",
-      loader=loader)
-
-temp_base = env.get_template("base.html")
-temp_box = env.get_template("box.html", parent=temp_base)
-temp_thread = env.get_template("thread.html", parent=temp_base)
-temp_compose = env.get_template("compose.html", parent=temp_base)
-
-
+MAIN_TEMPLATE = """
+<!doctype html>
+<head>
+    <title>tmail | {title}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="/static/script.js"></script> 
+</head>
+<body>
+    <div class="topbar">
+        <span class="logo">tmail</span>
+        <form action="">
+        <input type="search" name="search" class="search">
+        </form>
+        <a href="?refresh=true" class="refresh"><div>Refresh</div></a>
+    </div>
+    <div class="sidebar">
+        <ol class="sidelinks">
+            <li class="sidelink"><a id="sidelink-compose" href="/compose">Compose</a></li>
+            <li class="divider"></li>
+            <li class="sidelink"><a id="sidelink-inbox" href="/box/in">Inbox</a></li>
+            <li class="sidelink"><a id="sidelink-outbox" href="/box/out">Outbox</a></li>
+        </ol>
+    </div>
+    <div class="contentarea">
+        {content}
+    </div>
+</body>
+"""
 
 ######################
 # INBOXES / OUTBOXES #
 ######################
 
-def box(wfile,boxtype):
-    msgs = []
+def box(wfile, boxtype):
+    wfile.write(MAIN_TEMPLATE.format(title=boxtype+"box", content=get_box_content(boxtype)).encode("UTF-8"))
+
+def get_box_content(boxtype):
     if boxtype == "in":
         raw_msgs = database.get_inbox()
     elif boxtype == "out":
@@ -54,68 +69,87 @@ def box(wfile,boxtype):
         sortkey = lambda x: x[DATE_INDEX]
     raw_msgs.sort(key=sortkey, reverse=True)
 
+    # Adding messages
+    msgs = """<ol class="boxmessages">
+"""
     for raw_msg in raw_msgs:
-        msg = {}
-        msg['read'] = raw_msg[2] == 1
-        
-        parsed = email.message_from_string(raw_msg[0])
-        msg['msgid']  = escape(parsed.get("Message-ID"))
-        msg['sender'] = escape(parsed.get("From"))
-        msg['recip']  = escape(parsed.get("To"))
-        msg['subj']   = escape(parsed.get("Subject"))
-        msg['date']   = escape(parsed.get("Date"))
-        
-        msgs.append(msg)
-    
-    html = temp_box.render(boxtype=boxtype, msgs=msgs)
-    wfile.write(html.encode("UTF-8"))
+        if raw_msg[2] == 1: # is read?
+            weight = "normal"
+        else:
+            weight = "bold"
+        msg = email.message_from_string(raw_msg[0])
+        msgid  = escape(msg.get("Message-ID"))
+        sender = escape(msg.get("From"))
+        recip  = escape(msg.get("To"))
+        subj   = escape(msg.get("Subject"))
+        date   = escape(msg.get("Date"))
+
+        msgs += """
+                <li class="boxmessage">
+                    <a href="/thread/{msgid}">
+                        <div class="info whobox">
+                            <table>
+                            <tr><td style="color:#AAA;">F:</td><td>{sender}</td></tr>
+                            <tr><td style="color:#AAA;">T:</td><td>{recip}</td></tr>
+                            </table>
+                        </div>
+                        <div class ="info whatwhenbox">    
+                            <div class="subject" style="font-weight: {weight};">{subj}</div>
+                            <div class="date">{date}</div>
+                        </div>
+                        
+                    </a>
+                </li>""".format(msgid=msgid,sender=sender,recip=recip,weight=weight,subj=subj,date=date)
+    msgs += "</ol>"
+    return msgs
+
+
+
+
 
 ###################
 # MESSAGE THREADS #
 ###################
 
-ATTACHMENT_DIRECTORY = "attachments/" # TODO move
+THREADMESSAGE_404_TEMPLATE = """<li class="threadmessage" style="font-size:10px;"><i>The above message is in reply to another message, but that message could not be located.</i><br>{msgid}</li>"""
 
-#def thread(wfile, rootid):
-#    wfile.write(MAIN_TEMPLATE.format(title="thread", content=get_thread_content(rootid)).encode("UTF-8"))
+ATTACHMENT_DIRECTORY = "attachments/"
+ATTACHMENT_TEMPLATE = """<span class="attachment"><a href={path}>{filename}</a></span>\n"""
+
+def thread(wfile, rootid):
+    wfile.write(MAIN_TEMPLATE.format(title="thread", content=get_thread_content(rootid)).encode("UTF-8"))
 
 
-def thread(wfile,rootid):
-    msgs = []
-    nextid = rootid
+def get_thread_content(rootid):
+    msgs = """<ol class="threadmessages">\n"""
+    currid = rootid
     while True:
-        msg = get_thread_message(nextid)
-        msgs.append(msg)
-        if msg is None or msg['inreplyto'] == None:
+        result = get_thread_message(currid)
+        msgs += result[0]
+        currid = result[1]
+        if currid == None or currid == "None":
             break
-        nextid = unescape(msg['inreplyto'])
-    html = temp_thread.render(msgs=msgs)
-    wfile.write(html.encode("UTF-8"))
+    msgs += "</ol>"
+    return msgs
 
+# Called recursively get_thread_content
 def get_thread_message(msgid):
-    result = database.get_message(msgid, mark_read=True)
-    if result is None:
-        return None
-    parsed = email.message_from_string(result)
-    msg = {}
-    msg['subj']      = escape(parsed.get("Subject"))
-    msg['msgid']     = escape(parsed.get("Message-ID"))
-    msg['sender']    = escape(parsed.get("From"))
-    msg['recip']     = escape(parsed.get("To"))
-    msg['date']      = escape(parsed.get("Date"))
-    msg['cc']        = escape(parsed.get("Cc"))
-    msg['bcc']       = escape(parsed.get("Bcc"))
-    msg['inreplyto'] = escape(parsed.get("In-Reply-To"))
-    
-    if msg['recip'] is not None: msg['recip'] = msg['recip'].replace(",","<br>")
-    if msg['cc'] is not None: msg['cc'] = msg['cc'].replace(",","<br>")
-    if msg['bcc'] is not None: msg['bcc'] = msg['bcc'].replace(",","<br>")
+    msg = email.message_from_string(database.get_message(msgid, mark_read=True))
+    if not msg:
+        return (THREADMESSAGE_404_TEMPLATE.format(msgid=escape(msgid)),None)
+    subj      = escape(msg.get("Subject"))
+    msgid     = escape(msg.get("Message-ID"))
+    sender    = escape(msg.get("From"))
+    recip     = escape(msg.get("To")).replace(",","<br>")
+    date      = escape(msg.get("Date"))
+    cc        = escape(msg.get("Cc")).replace(",","<br>")
+    bcc       = escape(msg.get("Bcc")).replace(",","<br>")
+    inreplyto = escape(msg.get("In-Reply-To"))
 
-    (body,attachments) = get_message_body(parsed)
-    body = escape(body)
-    msg['attachments'] = attachments
+    (body,attachments) = get_message_body(msg)
     
-    # Hide quoted text #
+    body = escape(body)
+    # Hide quoted text
     # Text should be quoted if it starts with a "> ", or
     # if the line above or below it does (because some mail
     # clients are bad at word wrapping)
@@ -134,13 +168,53 @@ def get_thread_message(msgid):
                 already_quoting = False
     body = "\n".join(lines)
         
-    msg['body'] = body
     
-    return msg
+
+
+    msg_html = """
+            <li class="threadmessage">
+                <div class="threadmessage">
+                    <table class="infobox">
+                        <tr class="info "id="subject-{msgid}">
+                            <td class="prefix">Subj:</td>
+                            <td class="value" style="font-weight:bold;">{subj}</td>
+                        </tr>
+                        <tr class="info "id="msgid-{msgid}" style="display:none;">
+                            <td class="prefix">ID:</td>
+                            <td class="value">{msgid}</td>
+                        </tr>
+                        <tr class="info "id="sender-{msgid}">
+                            <td class="prefix">From:</td>
+                            <td class="value">{sender}</td>
+                        </tr>
+                        <tr class="info "id="recipient-{msgid}">
+                            <td class="prefix">To:</td>
+                            <td class="value">{recip}</td>
+                        </tr>
+                        <tr class="info "id="date-{msgid}">
+                            <td class="prefix">Date:</td>
+                            <td class="value">{date}</td>
+                        </tr>
+                        <tr class="info "id="cc-{msgid}" style="display:none;">
+                            <td class="prefix">CC:</td>
+                            <td class="value">{cc}</td>
+                        </tr>
+                        <tr class="info "id="bcc-{msgid}" style="display:none;">
+                            <td class="prefix">BCC:</td>
+                            <td class="value">{bcc}</td>
+                        </tr>
+                    </table>
+                    <div class="extended-toggle" onclick="toggleExtended('{msgid}');">Full details</div>
+                    <div class="body">{body}</div>
+                    <div class="attachments">{attachments}</div>
+                </div>
+            </li>""".format(subj=subj, msgid=msgid, sender=sender, recip=recip,date=date, 
+                            cc=cc, bcc=bcc, inreplyto=inreplyto, body=body, attachments=attachments)
+    return (msg_html,unescape(inreplyto))
 
 def get_message_body(msg):
     plain       = ""
-    attachments = []
+    attachments = ""
     if msg.is_multipart():
         counter = 1
         for part in msg.walk():
@@ -163,7 +237,7 @@ def get_message_body(msg):
                     fp.write(part.get_payload(decode=True))
 
                 # Add link to body
-                attachments.append({"path":"/" + ATTACHMENT_DIRECTORY+filename, "filename":filename})
+                attachments += ATTACHMENT_TEMPLATE.format(path="/" + ATTACHMENT_DIRECTORY+filename,filename=filename)
             elif ctype == 'text/plain':
                 plain += part.get_payload()
     elif msg.get_content_type() == 'text/plain':
@@ -173,6 +247,8 @@ def get_message_body(msg):
     return (plain,attachments)
 
 
+
+
 #################
 #    COMPOSE    #
 #################
@@ -180,6 +256,7 @@ def get_message_body(msg):
 INREPLYTO_HEADER_TEMPLATE = """<span class="reply-header">Replying to <a href="{inreplyto}">{inreplyto}</a></span>"""
 
 def compose(wfile, inreplyto=None, replyall=False):
+    print(inreplyto)
     wfile.write(MAIN_TEMPLATE.format(title="Compose", content=get_compose_content(None,inreplyto, replyall)).encode("UTF-8"))
     
 # The replyall recip list is constructed "using the contents
@@ -265,9 +342,9 @@ def get_accounts_dropdown(sender=""):
 # Fix html module functions to handle None inputs
 def escape(string):
     if string is None:
-        return None
+        return "None"
     return html_escape(string)
 def unescape(string):
     if string is None:
-        return None
+        return "None"
     return html_unescape(string)
