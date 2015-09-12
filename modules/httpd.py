@@ -149,8 +149,8 @@ class RequestHandler(BaseHTTPRequestHandler):
             # Cleaning
             if "inreplyto" in params:
                 args["inreplyto"] = params["inreplyto"][0]
-            if "replyall" in params:
-                args["replyall"] = True
+            if "is_reply_all" in params:
+                args["is_reply_all"] = True
             htgen.compose(self.wfile, **args)
         
         else:

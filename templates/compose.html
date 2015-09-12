@@ -1,13 +1,8 @@
-
-
-
-
-
 {% extends "base.html" %}
 {% block title %}Compose{% endblock %}
 
 {% block content %}
-{% if inreplyto_msg %}
+{% if inreplyto != None %}
     <span class="reply-header">Replying to <a href="{{inreplyto}}">{{inreplyto}}</a></span>
     <fieldset id="replymode-fieldset" class="replymode">
         <div>
@@ -29,16 +24,26 @@
         var recips_replyall = {{recips_replyall}};
         var recips_replyto = {{recips_replyto}};
         var recip_sender = {{recip_sender}};
-        //if ({replyall_enabled})
+        //if ({is_reply_all})
     </script>
 {% endif %}
     <ol id="recips" class="recips">
     </ol>
     <input id="addrecip" type="text" name="addrecip" class="addrecip">
     <script>
-    document.getElementById("addrecip").onkeypress = function(event) {
+document.getElementById("addrecip").onkeypress = function(event) {
     if (event.which == 13 || event.keyCode == 13)
-        addRecip(this.value);
+        if (isValidEmail(this.value) == true) {
+            addRecip(this.value);
+            this.value = "";
+            this.style.borderColor = "";
+            
+        }
+        else { 
+            this.style.borderColor = "red";
+        }
+        
+}
     </script>
     
     <select class="sender">

@@ -70,9 +70,16 @@ function radioChange(elem) {
 }
 
 function addRecip(value) {
-    // keypress TODO
     var li = document.createElement("li");
     var text = document.createTextNode(value);
     li.appendChild(text);
     document.getElementById("recips").appendChild(li);
+}
+
+
+
+
+function isValidEmail(email) {
+    var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i;
+    return re.test(email);
 }

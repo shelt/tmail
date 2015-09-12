@@ -16,7 +16,13 @@ from jinja2.loaders import FileSystemLoader
 
 from modules import database
 
+# TODO move the following to a Config table in the DB
+DEFAULT_SENDER = "sam@shelt.ca"
+ATTACHMENT_DIRECTORY = "attachments/" 
 TEMPLATE_DIR = "templates"
+
+
+
 # Load templates
 loader = FileSystemLoader(TEMPLATE_DIR)
 env = Environment(line_statement_prefix='%',
@@ -73,12 +79,6 @@ def box(wfile,boxtype):
 ###################
 # MESSAGE THREADS #
 ###################
-
-ATTACHMENT_DIRECTORY = "attachments/" # TODO move
-
-#def thread(wfile, rootid):
-#    wfile.write(MAIN_TEMPLATE.format(title="thread", content=get_thread_content(rootid)).encode("UTF-8"))
-
 
 def thread(wfile,rootid):
     msgs = []
@@ -177,21 +177,18 @@ def get_message_body(msg):
 #    COMPOSE    #
 #################
 
-INREPLYTO_HEADER_TEMPLATE = """<span class="reply-header">Replying to <a href="{inreplyto}">{inreplyto}</a></span>"""
-
-def compose(wfile, inreplyto=None, replyall=False):
-    wfile.write(MAIN_TEMPLATE.format(title="Compose", content=get_compose_content(None,inreplyto, replyall)).encode("UTF-8"))
-    
 # The replyall recip list is constructed "using the contents
 # of the original From, To and CC header as the default
 # set of reply targets (with duplicates and possibly the
 # replying user's address removed)."
 # https://www.ietf.org/proceedings/43/I-D/draft-ietf-drums-replyto-meaning-00.txt
 
-def get_compose_content(sender, inreplyto, replyall_enabled): # note sender is unused; see todo
-    html = ""
-    # Add reply header
+def compose(wfile, inreplyto=None, is_reply_all=False):
     inreplyto_msg = None
+    recips_replyall = None
+    recips_replyto = None
+    recip_sender = None
+    # Reply elements
     if inreplyto:
         inreplyto_msg = email.message_from_string(database.get_message(inreplyto))
     if inreplyto_msg is not None:
@@ -201,62 +198,26 @@ def get_compose_content(sender, inreplyto, replyall_enabled): # note sender is u
         replyto = [email.utils.parseaddr(field)[1] for field in inreplyto_msg.get("Reply-To").split(",")]
         fr = email.utils.parseaddr(inreplyto_msg.get("From"))[1]
         # Merge lists for use in script element
-        recips_replyall = set(cc) | set(to) | set((fr,))
-        recips_replyto = set(replyto)
+        recips_replyall = list(set(cc) | set(to) | set((fr,)))
+        recips_replyto = list(set(replyto))
         recip_sender = [fr] # No need to convert it to set; it's duplicate-free.
-
-        html += INREPLYTO_HEADER_TEMPLATE.format(inreplyto=inreplyto)
-        html += """
-            <fieldset id="replymode-fieldset" class="replymode">
-                <div>
-                    <label class="selected">
-                      Reply-to
-                      <input name="replymode" onclick="radioChange(this);setToList(recips_replyto);" type="radio" value="reply_to" />
-                    </label>
-                    <label>
-                      Sender
-                      <input name="replymode" onclick="radioChange(this);setToList(recip_sender);" type="radio" value="sender" />
-                    </label>
-                    <label>
-                      Reply-All
-                      <input name="replymode" onclick="radioChange(this);setToList(recips_replyall);" type="radio" value="reply_all" />
-                    </label>
-                </div>
-            </fieldset>
-            <script>
-                var recips_replyall = {recips_replyall};
-                var recips_replyto = {recips_replyto};
-                var recip_sender = {recip_sender};
-                if ({replyall_enabled})
-            </script>
-        """.format(recips_replyall=list(recips_replyall), recips_replyto=list(recips_replyto), recip_sender=recip_sender)
-    # note the end of above if inreplyto block
-    html += """
-    <ol id="recips" class="recips">
-    </ol>
-    <input type="text" name="addrecip" class="addrecip" onkeypress="addRecip(this);">
-    {from_account}
-    <script>
-    """.format(from_account=get_accounts_dropdown())
-    return html
-
-ACCOUNTS_DROPDOWN_TEMPLATE = """<option {selected} value="{address}">{name} &lt;{address}&gt;</option>\n"""
-def get_accounts_dropdown(sender=""):
-    default_sender = "sam@shelt.ca" #database.get_setting("default_sender") #TODO SETTINGS SHOULD BE RETRIEVED ONE TIME AND STORED IN GLOBALS
-
-    text = """<select class="sender">\n"""
+    else:
+        inreplyto = None # Tell the parser that it isn't a reply
+    
+    # Accounts
+    accounts = []
     for account in database.get_account_list():
-        if sender == "":
-            if account[0] == default_sender:
-                selected = "selected"
-            else:
-                selected = ""
-        else:
-            selected = sender
-        text += ACCOUNTS_DROPDOWN_TEMPLATE.format(selected=selected, address=account[0], name=account[1])
-    text += "</select>\n"
-    return text
-
+        acc_dict = {"address":account[0], "name":account[1]}
+        acc_dict["default"] = account[0] == DEFAULT_SENDER
+        accounts.append(acc_dict)
+    
+    html = temp_compose.render(inreplyto=inreplyto,
+                              is_reply_all=is_reply_all,
+                              recips_replyall=recips_replyall,
+                              recips_replyto=recips_replyto,
+                              recip_sender=recip_sender,
+                              accounts=accounts)
+    wfile.write(html.encode("UTF-8"))
 
 #################
 # MISCELLANEOUS #
