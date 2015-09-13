@@ -3,8 +3,11 @@
 <head>
     <title>tmail | {% block title %}{% endblock %}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="/static/style.css" />
-    <script src="/static/script.js"></script> 
+    <link rel="stylesheet" href="/static/base/style.css" />
+    <link rel="stylesheet" href="/static/{% block static_dir %}base{% endblock %}/style.css" />
+    <script src="/static/base/script.js"></script> 
+    <script src="/static/{{self.static_dir()}}/script.js"></script> 
+    {% block head %}{% endblock %}
 </head>
 <body>
     <div class="topbar">

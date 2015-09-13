@@ -1,50 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Compose{% endblock %}
+{% block static_dir %}compose{% endblock %}
+{% block head %}
+    {% if inreplyto != None %}
+        <meta id="recips_replyall" content="{{ recips_replyall|join(',') }}">
+        <meta id="recips_replyto" content="{{ recips_replyto|join(',') }}">
+        <meta id="recip_sender" content="{{ recip_sender|join(',') }}">
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 {% if inreplyto != None %}
-    <span class="reply-header">Replying to <a href="{{inreplyto}}">{{inreplyto}}</a></span>
+    <span class="reply-header">Replying to <a href="/thread?msgid={{inreplyto}}">{{inreplyto}}</a></span>
     <fieldset id="replymode-fieldset" class="replymode">
         <div>
             <label class="selected">
               Reply-to
-              <input name="replymode" onclick="radioChange(this);setToList(recips_replyto);" type="radio" value="reply_to" />
+              <input name="replymode" id="r_reply_to" type="radio" value="reply_to" />
             </label>
             <label>
               Sender
-              <input name="replymode" onclick="radioChange(this);setToList(recip_sender);" type="radio" value="sender" />
+              <input name="replymode" id="r_sender" type="radio" value="sender" />
             </label>
             <label>
               Reply-All
-              <input name="replymode" onclick="radioChange(this);setToList(recips_replyall);" type="radio" value="reply_all" />
+              <input name="replymode" id="r_reply_all" type="radio" value="reply_all" />
             </label>
         </div>
     </fieldset>
-    <script>
-        var recips_replyall = {{recips_replyall}};
-        var recips_replyto = {{recips_replyto}};
-        var recip_sender = {{recip_sender}};
-        //if ({is_reply_all})
-    </script>
 {% endif %}
     <ol id="recips" class="recips">
     </ol>
     <input id="addrecip" type="text" name="addrecip" class="addrecip">
-    <script>
-document.getElementById("addrecip").onkeypress = function(event) {
-    if (event.which == 13 || event.keyCode == 13)
-        if (isValidEmail(this.value) == true) {
-            addRecip(this.value);
-            this.value = "";
-            this.style.borderColor = "";
-            
-        }
-        else { 
-            this.style.borderColor = "red";
-        }
-        
-}
-    </script>
     
     <select class="sender">
     {% for account in accounts %}

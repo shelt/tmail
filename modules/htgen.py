@@ -210,7 +210,6 @@ def compose(wfile, inreplyto=None, is_reply_all=False):
         acc_dict = {"address":account[0], "name":account[1]}
         acc_dict["default"] = account[0] == DEFAULT_SENDER
         accounts.append(acc_dict)
-    
     html = temp_compose.render(inreplyto=inreplyto,
                               is_reply_all=is_reply_all,
                               recips_replyall=recips_replyall,

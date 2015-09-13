@@ -1,0 +1,53 @@
+ol.boxmessages
+{
+    width:100%;
+    height:100%;
+    overflow-y: scroll;
+    padding: 0;
+    margin: 0;
+}
+li.boxmessage
+{
+    border-bottom:1px solid #B3B3B3;
+    list-style-type:none;
+    height:40px;
+}
+li.boxmessage:hover
+{
+    background-color:#EEE;
+    border:1px solid #B3B3B3;
+}
+li.boxmessage > a
+{
+    
+    display:block;
+    width:100%;
+    height:100%;
+    padding:0;
+    
+    color: #333;
+    text-decoration : none;
+}
+
+div.info
+{
+    font-size:10px;
+    padding-top:0.6%;
+    line-height:12px;
+}
+
+div.info.whobox
+{
+    padding-top:0.3%; /* Different from div.info (parent) */
+    float:left;
+    margin-left:1%; /* contributes to div.info.subject margin-left */
+    max-width: 35%; /* contributes to div.info.subject margin-left */
+
+}
+
+div.info.whatwhenbox
+{
+    font-size:10px;
+    margin-left:36%; /* same as whobox.max-width + whobox.margin-left*/
+}
+div.whatwhenbox > div.date {color:#AAA;}

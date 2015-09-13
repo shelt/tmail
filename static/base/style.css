@@ -1,0 +1,145 @@
+@font-face {
+    font-family: liberation-sans;
+    src: url("fonts/LiberationSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: liberation-sans;
+    src: url("fonts/LiberationSans-Bold.ttf");
+    font-weight: bold;
+} 
+@font-face {
+    font-family: liberation-sans;
+    src: url("fonts/LiberationSans-Italic.ttf");
+    font-style: italic;
+} 
+
+body
+{
+    font-size: 14px;
+    font-weight: 400;
+    font-family: liberation-sans, monospace;
+    line-height: 24px;
+    color: #666;
+    margin:0;
+}
+/*
+    BARS
+*/
+
+div.topbar
+{
+    width:100%;
+    height:50px;
+    top:0;
+    left:0;
+    position:fixed;
+
+    border-bottom:1px solid #B3B3B3;
+    background:#F6F6F6;
+}
+span.logo
+{
+    font-weight: bold;
+    color:#3366CC;
+    position:absolute;
+    bottom:25%;
+    padding-left:10px;
+    opacity:0.4;
+    font-size:30px;
+}
+
+input.search
+{
+    position:absolute;
+    left:10%;
+    bottom:25%;
+    height:21px;
+    width: 35%;
+    border:1px solid #B3B3B3;
+}
+
+
+a.refresh { text-decoration: none; }
+a.refresh > div
+{
+    position: absolute;
+    right:2%;
+    bottom:25%;
+    padding: 2px 7px 2px 7px;
+    display:inline-block;
+
+    color: #888;
+    background-color: #FFF;
+    border:1px solid #B3B3B3;
+}
+a.refresh > div:hover { background-color: #DDD; }
+
+
+/*
+    SIDEBAR AREA
+*/
+div.sidebar
+{
+    width:10%;
+    height: calc(100% - 50px);
+    top:50px;
+    left:0;
+    position:fixed;
+
+    border:1px solid #B3B3B3;
+    border-right:1px solid #B3B3B3;
+    border-bottom:1px solid #B3B3B3;
+    background:#F6F6F6;
+}
+ol.sidelinks
+{
+    width:100%;
+    height:100%;
+    padding: 0;
+    margin: 0;
+}
+li.divider
+{
+    height:10px;
+    list-style-type:none;
+    
+    
+}
+li.sidelink
+{
+    border-top:1px solid #B3B3B3;
+    border-bottom:1px solid #B3B3B3;
+    list-style-type:none;
+    height:25px;
+}
+li.sidelink:hover
+{
+    background-color:#EEE;
+    border:1px solid #B3B3B3;
+}
+li.sidelink > a
+{
+    font-size:15px;
+    display:block;
+    width:100%;
+    height:100%;
+    padding:0;
+    text-align: center;
+    color: #666;
+    text-decoration : none;
+}
+
+
+/*******************
+    CONTENT AREA
+*******************/
+
+div.contentarea
+{
+    width: calc(100% - 10.1%);
+    height: calc(100% - 50px);
+    position:fixed;
+    top:50px;
+    left:10.1%;
+}
