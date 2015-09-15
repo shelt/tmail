@@ -15,7 +15,8 @@
         <form action="">
         <input type="search" name="search" class="search">
         </form>
-        <a href="?refresh=true" class="refresh"><div>Refresh</div></a>
+        {% block topbar %}
+        {% endblock %}
     </div>
     <div class="sidebar">
         <ol class="sidelinks">

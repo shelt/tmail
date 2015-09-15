@@ -60,6 +60,8 @@ ol.recips
     padding:0;
     margin:0;
     margin-left: 1%;
+    max-height: 100px;
+    overflow-y: scroll;
 }
 ol.recips > li
 {
@@ -86,4 +88,18 @@ tr.field > td.prefix
 }
 tr.field > td.value
 {
+}
+
+/* Compose area */
+textarea.composebody
+{
+    width: 100%;
+    height:100%;
+    bottom:5%;
+}
+
+div.footerarea
+{
+    width:100%;
+    height:5%;
 }

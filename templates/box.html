@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ boxtype }}box{% endblock %}
 {% block static_dir %}box{% endblock %}
-
+{% block topbar %}
+<a href="?refresh=true" class="common-button"><div>Refresh</div></a>
+{% endblock %}
 {% block content %}
 <ol class="boxmessages">
 {% for msg in msgs %}

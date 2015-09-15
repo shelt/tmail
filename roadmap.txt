@@ -42,12 +42,11 @@ linking to a non-root email should link to the root of that thread and then jump
 
 
 ### COMPOSE
-Styling
 highlight reply sender in To: list
 request read receipt option
-gnupg options
-preview source option (new tab)
-attach (drag drop as well)
+Gnupg button
+Make the preview button do something (like open window with source option)
+Make attach button do something (drag drop as well)
 quote thread option
 cc bcc
 submitting (post)

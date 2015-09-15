@@ -58,17 +58,25 @@ window.onload = function() {
 // the DOM to reflect the array.
 
 function toList_set(list, elem) {
-    // Data-wise
+    var recips = document.getElementById("recips");
+    // Make visible (which is the case if the list was previously empty)
+    recips.style = "";
+
+    // Set it Data-wise
     recips_data = list;
 
-    // DOM-wise
-    var toList = document.getElementById("recips");
-    toList.innerHTML = "";
+    // Set it DOM-wise
+    recips.innerHTML = "";
     for(var i=0; i<recips_data.length; i++) {
         var li = document.createElement("li");
         var text = document.createTextNode(recips_data[i]);
+        li.setAttribute("id",text);
         li.appendChild(text);
-        toList.appendChild(li);
+        recips.appendChild(li);
+        // Add remove button
+        var rem = document.createElement("div");
+        rem.setAttribute("class", "recip-remove");
+        rem.setAttribute("onclick", recipRemove(docu
         // TODO <div class="recip-remove" onclick="recipRemove('{recip}')">X</div>
     }
     
@@ -77,13 +85,17 @@ function toList_set(list, elem) {
         radioChange(elem);
 }
 function toList_append(value) {
-    // Data-wise
+    var recips = document.getElementById("recips");
+    // Make visible (which is the case if the list was previously empty)
+    recips.style = "";
+
+    // Set it Data-wise
     recips_data.push(value);
-    // DOM-wise
+    // Set it DOM-wise
     var li = document.createElement("li");
     var text = document.createTextNode(value);
     li.appendChild(text);
-    document.getElementById("recips").appendChild(li);
+    recips.appendChild(li);
     
     if (RECIPS_REPLYALL !== null)
         // Highlight radio button

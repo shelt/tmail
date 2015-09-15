@@ -1,3 +1,9 @@
+/*
+    This being the base page styles, classes
+    prefixed with "common-" are classes which
+    are used by non-base HTML.
+*/
+
 @font-face {
     font-family: liberation-sans;
     src: url("fonts/LiberationSans-Regular.ttf");
@@ -60,12 +66,15 @@ input.search
 }
 
 
-a.refresh { text-decoration: none; }
-a.refresh > div
+a.common-button
 {
-    position: absolute;
-    right:2%;
-    bottom:25%;
+    text-decoration: none;
+    float:right;
+    margin-top: 10px;
+    margin-right:2%;
+}
+a.common-button > div
+{
     padding: 2px 7px 2px 7px;
     display:inline-block;
 
@@ -73,7 +82,7 @@ a.refresh > div
     background-color: #FFF;
     border:1px solid #B3B3B3;
 }
-a.refresh > div:hover { background-color: #DDD; }
+a.common-button > div:hover { background-color: #DDD; }
 
 
 /*

@@ -8,7 +8,11 @@
         <meta id="recip_sender" content="{{ recip_sender|join(',') }}">
     {% endif %}
 {% endblock %}
-
+{% block topbar %}
+<a href="?submit=todo-this-should-post-form" class="common-button"><div>Submit</div></a>
+<a href="todo" class="common-button"><div>Preview</div></a>
+<a href="todo" class="common-button"><div>Attach</div></a>
+{% endblock %}
 {% block content %}
 {% if inreplyto != None %}
     <span class="reply-header">Replying to <a href="/thread?msgid={{inreplyto}}">{{inreplyto}}</a></span>
@@ -38,7 +42,7 @@
 {% endif %}
 <tr class="field"><td class="prefix">To:</td>
 <td class="value">
-    <ol id="recips" class="recips"></ol>
+    <ol id="recips" class="recips" style="display:none;"></ol>
     <input id="addrecip" type="text" name="addrecip" class="addrecip">
 </td>
 </tr>
@@ -52,4 +56,7 @@
 </td>
 </tr>
 </table>
+
+<textarea class="composebody"></textarea>
+<div class="footerarea"></div>
 {% endblock %}"
