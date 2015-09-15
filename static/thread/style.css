@@ -37,7 +37,7 @@ div.threadmessage > div.infobox
     font-size:10px;
 }
 
-
+/* Table */
 tr.info
 {
     line-height:11px;
@@ -46,6 +46,10 @@ tr.info > td.prefix
 {
     color:#AAA;
     vertical-align: top;
+}
+tr.info > td.value
+{
+    line-height: 14px;
 }
 
 /* Extended info hiding */
@@ -71,10 +75,7 @@ li.threadmessage div.body
     white-space: pre-wrap;
     margin-top: 15px;
 }
-tr.info > td.value
-{
-    line-height: 14px;
-}
+
 
 div.attachments
 {

@@ -12,30 +12,44 @@
 {% block content %}
 {% if inreplyto != None %}
     <span class="reply-header">Replying to <a href="/thread?msgid={{inreplyto}}">{{inreplyto}}</a></span>
-    <fieldset id="replymode-fieldset" class="replymode">
-        <div>
-            <label class="selected">
-              Reply-to
-              <input name="replymode" id="r_reply_to" type="radio" value="reply_to" />
-            </label>
-            <label>
-              Sender
-              <input name="replymode" id="r_sender" type="radio" value="sender" />
-            </label>
-            <label>
-              Reply-All
-              <input name="replymode" id="r_reply_all" type="radio" value="reply_all" />
-            </label>
-        </div>
-    </fieldset>
 {% endif %}
-    <ol id="recips" class="recips">
-    </ol>
+<table>
+{% if inreplyto != None %}
+    <tr class="field"><td class="prefix">Reply mode:</td>
+    <td class="value">
+        <fieldset id="replymode-fieldset" class="replymode">
+            <div>
+                <label class="selected">
+                  Reply-to
+                  <input name="replymode" id="r_reply_to" type="radio" value="reply_to" />
+                </label>
+                <label>
+                  Sender
+                  <input name="replymode" id="r_sender" type="radio" value="sender" />
+                </label>
+                <label>
+                  Reply-All
+                  <input name="replymode" id="r_reply_all" type="radio" value="reply_all" />
+                </label>
+            </div>
+        </fieldset>
+    </td>
+    </tr>
+{% endif %}
+<tr class="field"><td class="prefix">To:</td>
+<td class="value">
+    <ol id="recips" class="recips"></ol>
     <input id="addrecip" type="text" name="addrecip" class="addrecip">
-    
+</td>
+</tr>
+<tr class="field"><td class="prefix">From:</td>
+<td class="value">
     <select class="sender">
     {% for account in accounts %}
         <option {% if account.default %}selected{% endif %} value="{{account.address}}">{{account.name}} &lt;{{account.address}}&gt;</option>
     {% endfor %}
     "</select>
+</td>
+</tr>
+</table>
 {% endblock %}"

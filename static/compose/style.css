@@ -73,3 +73,17 @@ select.sender
     margin:0;
     margin-left:1%;
 }
+
+
+/* Table */
+tr.field
+{
+}
+tr.field > td.prefix
+{
+    color:#AAA;
+    vertical-align: top;
+}
+tr.field > td.value
+{
+}

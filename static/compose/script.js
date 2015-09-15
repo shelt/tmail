@@ -1,14 +1,20 @@
+var recips_data = [];
+var RECIPS_REPLYALL = [];
+var RECIPS_REPLYTO = [];
+var RECIPS_SENDER = [];
+
 window.onload = function() {
     // Highlight current sidelink selection
     setSidelink(document.getElementById("sidelink-compose"));
     
     // Reply-mode stuff
-    var RECIPS_REPLYALL = document.getElementById("recips_replyall").content.split(",");
-    var RECIPS_REPLYTO = document.getElementById("recips_replyto").content.split(",");
-    var RECIP_SENDER = document.getElementById("recip_sender").content.split(",");
-    var recips = [];
+
     
-    if (typeof RECIP_SENDER !== null) { // This message is a reply
+    RECIPS_REPLYALL = document.getElementById("recips_replyall");
+    if (RECIPS_REPLYALL !== null) { // This message is a reply
+        RECIPS_REPLYALL = RECIPS_REPLYALL.content.split(",");
+        RECIPS_REPLYTO = document.getElementById("recips_replyto").content.split(",");
+        RECIP_SENDER = document.getElementById("recip_sender").content.split(",");
         if (Query["is_reply_all"] === "True") // And it's reply-all
             toList_set(RECIPS_REPLYALL,document.getElementById("r_reply_all"));
         else
@@ -29,10 +35,11 @@ window.onload = function() {
     document.getElementById("addrecip").onkeypress = function(event) {
         if (event.which == 13 || event.keyCode == 13) {
             if (isValidEmail(this.value) == true) {
-                addRecip(this.value);
+                toList_append(this.value);
                 this.value = "";
                 this.style.borderColor = "";
-                radioChange();
+                if (RECIPS_REPLYALL !== null)
+                    radioChange();
             }
             else { 
                 this.style.borderColor = "red";
@@ -52,40 +59,43 @@ window.onload = function() {
 
 function toList_set(list, elem) {
     // Data-wise
-    recips = list;
+    recips_data = list;
 
     // DOM-wise
     var toList = document.getElementById("recips");
     toList.innerHTML = "";
-    for(var i=0; i<recips.length; i++) {
+    for(var i=0; i<recips_data.length; i++) {
         var li = document.createElement("li");
-        var text = document.createTextNode(recips[i]);
+        var text = document.createTextNode(recips_data[i]);
         li.appendChild(text);
         toList.appendChild(li);
         // TODO <div class="recip-remove" onclick="recipRemove('{recip}')">X</div>
     }
     
-    // Highlight radio button
-    radioChange(elem);
+    if (RECIPS_REPLYALL !== null)
+        // Highlight radio button
+        radioChange(elem);
 }
 function toList_append(value) {
     // Data-wise
-    recips.append(value);
+    recips_data.push(value);
     // DOM-wise
     var li = document.createElement("li");
     var text = document.createTextNode(value);
     li.appendChild(text);
     document.getElementById("recips").appendChild(li);
     
-    // Highlight radio button
-    radioChange(null);
+    if (RECIPS_REPLYALL !== null)
+        // Highlight radio button
+        radioChange(null);
     
 }
 function toList_drop(value) { // TODO
     document.getElementById("recips");
     
-    // Highlight radio button
-    radioChange(null);
+    if (RECIPS_REPLYALL !== null)
+        // Highlight radio button
+        radioChange(null);
 }
 
 // [called by]: toList_set, toList_append, toList_drop
