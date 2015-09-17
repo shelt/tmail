@@ -193,8 +193,8 @@ def compose(wfile, inreplyto=None, is_reply_all=False):
         inreplyto_msg = email.message_from_string(database.get_message(inreplyto))
     if inreplyto_msg is not None:
         # Convert ["sam shelton <sam@shelt.ca>"] to ["sam@shelt.ca"] for to, cc, and from fields
-        cc = [email.utils.parseaddr(field)[1] for field in inreplyto_msg.get("Cc").split(",")]
-        to = [email.utils.parseaddr(field)[1] for field in inreplyto_msg.get("To").split(",")] #TODO remove self email from recips
+        cc = [email.utils.parseaddr(field)[1] for field in (inreplyto_msg.get("Cc") or "").split(",")]
+        to = [email.utils.parseaddr(field)[1] for field in (inreplyto_msg.get("To") or "").split(",")] #TODO remove self email from recips
         replyto = [email.utils.parseaddr(field)[1] for field in inreplyto_msg.get("Reply-To").split(",")]
         fr = email.utils.parseaddr(inreplyto_msg.get("From"))[1]
         # Merge lists for use in script element

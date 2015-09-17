@@ -63,44 +63,49 @@ function toList_set(list, elem) {
     recips.style = "";
 
     // Set it Data-wise
-    recips_data = list;
+    recips_data.length = 0;
+    recips_data.push.apply(recips_data,list);
 
     // Set it DOM-wise
     recips.innerHTML = "";
     for(var i=0; i<recips_data.length; i++) {
-        var li = document.createElement("li");
-        var text = document.createTextNode(recips_data[i]);
-        li.setAttribute("id",text);
-        li.appendChild(text);
-        recips.appendChild(li);
-        // Add remove button
-        var rem = document.createElement("div");
-        rem.setAttribute("class", "recip-remove");
-        rem.setAttribute("onclick", recipRemove(docu
-        // TODO <div class="recip-remove" onclick="recipRemove('{recip}')">X</div>
-    }
+   }
     
     if (RECIPS_REPLYALL !== null)
         // Highlight radio button
         radioChange(elem);
 }
 function toList_append(value) {
-    var recips = document.getElementById("recips");
     // Make visible (which is the case if the list was previously empty)
     recips.style = "";
 
-    // Set it Data-wise
-    recips_data.push(value);
-    // Set it DOM-wise
-    var li = document.createElement("li");
-    var text = document.createTextNode(value);
-    li.appendChild(text);
-    recips.appendChild(li);
+    toList_add(value,document.getElementById("recips");
     
     if (RECIPS_REPLYALL !== null)
         // Highlight radio button
         radioChange(null);
     
+}
+// This function is called by toList_append and toList_set.
+function toList_add(value,list) {
+ 
+    // Set it Data-wise
+    list.push(value);
+    // Set it DOM-wise
+    var li = document.createElement("li");
+    li.setAttribute("id",value);
+    li.appendChild(document.createTextNode(value));
+
+    //Add remove button
+    var rem = document.createElement("div");
+    rem.setAttribute("class", "recip-remove");
+    rem.setAttribute("onclick", "alert('todo');");
+    rem.appendChild(document.createTextNode("X"));
+    li.appendChild(rem);
+    recips.appendChild(li); 
+}
+
+
 }
 function toList_drop(value) { // TODO
     document.getElementById("recips");
@@ -113,7 +118,7 @@ function toList_drop(value) { // TODO
 // [called by]: toList_set, toList_append, toList_drop
 // Sets the selected highlighted reply-mode. (Purely cosmetic)
 function radioChange(elem) {
-    if (elem === null) { // Unset highlight
+    if (elem === null || typeof elem === "undefined") { // Unset highlight
         var labels = document.getElementById("replymode-fieldset").children[0].children;
         for (var i=0; i<labels.length; i++)
             if (labels[i].getAttribute("class") === "selected")
